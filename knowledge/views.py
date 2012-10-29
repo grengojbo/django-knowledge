@@ -8,7 +8,9 @@ from django.db.models import Q
 from knowledge.models import Question, Response, Category
 from knowledge.forms import QuestionForm, ResponseForm
 from knowledge.utils import paginate
-
+import logging
+# Get an instance of a logger
+logger = logging.getLogger(__name__)
 
 ALLOWED_MODS = {
     'question': [
@@ -25,7 +27,7 @@ ALLOWED_MODS = {
 
 
 def get_my_questions(request):
-
+    logger.debug("viev get_my_questions")
     if settings.LOGIN_REQUIRED and not request.user.is_authenticated():
         return HttpResponseRedirect(settings.LOGIN_URL+"?next=%s" % request.path)
 
@@ -38,7 +40,7 @@ def get_my_questions(request):
 
 def knowledge_index(request,
                     template='django_knowledge/index.html'):
-
+    logger.debug("viev knowledge_index")
     if settings.LOGIN_REQUIRED and not request.user.is_authenticated():
         return HttpResponseRedirect(settings.LOGIN_URL+"?next=%s" % request.path)
 
@@ -59,7 +61,7 @@ def knowledge_list(request,
                    category_slug=None,
                    template='django_knowledge/list.html',
                    Form=QuestionForm):
-
+    logger.debug("viev knowledge_list")
     if settings.LOGIN_REQUIRED and not request.user.is_authenticated():
         return HttpResponseRedirect(settings.LOGIN_URL+"?next=%s" % request.path)
 
@@ -99,10 +101,10 @@ def knowledge_thread(request,
                      slug=None,
                      template='django_knowledge/thread.html',
                      Form=ResponseForm):
-
+    logger.debug("viev django_knowledge/thread.html")
     if settings.LOGIN_REQUIRED and not request.user.is_authenticated():
         return HttpResponseRedirect(settings.LOGIN_URL+"?next=%s" % request.path)
-    
+
     try:
         question = Question.objects.can_view(request.user)\
                                    .get(id=question_id)
@@ -157,7 +159,7 @@ def knowledge_moderate(
         /knowledge/moderate/response/3/inherit/     -> 200
 
     """
-
+    logger.debug("viev knowledge_moderate")
     if settings.LOGIN_REQUIRED and not request.user.is_authenticated():
         return HttpResponseRedirect(settings.LOGIN_URL+"?next=%s" % request.path)
 
@@ -197,7 +199,7 @@ def knowledge_moderate(
 def knowledge_ask(request,
                   template='django_knowledge/ask.html',
                   Form=QuestionForm):
-
+    logger.debug("knowledge_ask")
     if settings.LOGIN_REQUIRED and not request.user.is_authenticated():
         return HttpResponseRedirect(settings.LOGIN_URL+"?next=%s" % request.path)
 
