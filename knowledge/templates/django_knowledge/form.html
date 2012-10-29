@@ -4,6 +4,9 @@
   {% csrf_token %}
 
   {% for field in form.visible_fields %}
+<<<<<<< HEAD
+  {% include "base/field.html" with field=field %}
+=======
 
     <div class="field-wrapper field-{{ field.html_name }}">
       <div class="field-label">
@@ -20,6 +23,7 @@
 
       {{ field.errors }}
     </div>
+>>>>>>> d6f5d9299e6812d381cdb36558fdb215cdbb9fac
   {% endfor %}
 
   {# these are, for the most part, unused #}
