@@ -1,6 +1,6 @@
 {% extends "django_knowledge/emails/base.html" %}
 
-{% load i18n %}
+{% load i18n markup %}
 
 {% block content %}
     <p>{% blocktrans with name=name %}Hello {{ name }},{% endblocktrans %}</p>
