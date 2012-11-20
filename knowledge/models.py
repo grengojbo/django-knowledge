@@ -1,5 +1,6 @@
+# -*- mode: python; coding: utf-8; -*-
 from knowledge import settings
-
+from django.contrib.auth.models import User
 from django.db import models
 from django.utils.translation import ugettext_lazy as _
 
@@ -24,9 +25,10 @@ class Category(models.Model):
 
     title = models.CharField(max_length=255)
     slug = models.SlugField(unique=True)
+    user = models.ManyToManyField(User, blank=True, null=True)
 
     def __unicode__(self):
-        return self.title
+        return u"{0}".format(self.title)
 
     class Meta:
         ordering = ['title']
@@ -156,7 +158,7 @@ class Question(KnowledgeBase):
 
     locked = models.BooleanField(default=False)
 
-    categories = models.ManyToManyField('knowledge.Category', blank=True)
+    categories = models.ManyToManyField('knowledge.Category', blank=True, null=True)
 
     objects = QuestionManager()
 

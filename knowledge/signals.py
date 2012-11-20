@@ -1,6 +1,9 @@
+# -*- mode: python; coding: utf-8; -*-
 from knowledge.utils import get_module
 from knowledge import settings
+import logging
 
+logger = logging.getLogger(__name__)
 
 def send_alerts(target_dict, response=None, question=None, **kwargs):
     """
@@ -26,6 +29,7 @@ def send_alerts(target_dict, response=None, question=None, **kwargs):
             'question': question,
             'site': site
         }
+        logger.debug("Send Message to: {0}".format(email))
 
         subject = render_to_string(
             'django_knowledge/emails/subject.txt', context)
@@ -63,6 +67,7 @@ def knowledge_post_save(sender, instance, created, **kwargs):
                             for i in instances if i.alert])
 
         elif isinstance(instance, Question):
+            # TODO: отправка почты всем is_staff переделать на категории
             staffers = User.objects.filter(is_staff=True)
             out_dict = dict([[user.email, user] for user in staffers
                                 if user.has_perm('change_question')])

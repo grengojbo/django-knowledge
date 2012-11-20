@@ -1,3 +1,4 @@
+# -*- mode: python; coding: utf-8; -*-
 import settings
 
 from django.http import Http404, HttpResponseRedirect
