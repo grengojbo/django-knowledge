@@ -45,7 +45,7 @@ msgstr "Категорії"
 
 #: models.py:49
 msgid "Alert"
-msgstr "Оповіщення"
+msgstr "Нагадувати о повідомленнях"
 
 #: models.py:50
 msgid "Check this if you want to be alerted when a new response is added."
@@ -81,7 +81,7 @@ msgstr "Опис"
 
 #: models.py:150
 msgid "Please offer details. Markdown enabled."
-msgstr "Уцінка включена. Будь ласка, вкажіть деталі. "
+msgstr "Уключена. удь ласка, введіть деталі пропозиції. Markdown включений."
 
 #: models.py:153 models.py:256
 msgid "Status"
