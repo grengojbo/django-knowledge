@@ -9,8 +9,8 @@ FREE_RESPONSE = getattr(settings, 'KNOWLEDGE_FREE_RESPONSE', True)
 
 # alerts
 ALERTS = getattr(settings, 'KNOWLEDGE_ALERTS', False)
-ALERTS_FUNCTION_PATH = getattr(settings, 'KNOWLEDGE_ALERTS_FUNCTION_PATH',
-    'knowledge.signals.send_alerts')
+ALERTS_FUNCTION_PATH = getattr(settings, 'KNOWLEDGE_ALERTS_FUNCTION_PATH', 'knowledge.signals.send_alerts')
+KN_REDIRECT_PATH = getattr(settings, 'KNOWLEDGE_REDIREC_PATH', 'knowledge_index')
 
 # misc
 SLUG_URLS = getattr(settings, 'KNOWLEDGE_SLUG_URLS', True)
