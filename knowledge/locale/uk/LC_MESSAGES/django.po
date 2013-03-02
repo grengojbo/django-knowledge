@@ -27,7 +27,7 @@ msgstr "Внутрішня"
 
 #: forms.py:63 forms.py:121
 msgid "Phone number"
-msgstr ""
+msgstr "Номер телефону"
 
 #: models.py:11
 msgid "Public"
@@ -229,8 +229,8 @@ msgid ""
 "        "
 msgstr ""
 "\n"
-"⏎ Ми хотіли, щоб ви знали, нова відповідь була додана: \"%(title)s\". Ви "
-"можете побачити її тут: <a href=\"%(domain)s%(url)s\">%(domain)s%(url)s</a>⏎"
+"Ми хотіли, щоб ви знали, нова відповідь була додана: \"%(title)s\". Ви "
+"можете побачити її тут: <a href=\"%(domain)s%(url)s\">%(domain)s%(url)s</a>"
 
 #: templates/django_knowledge/emails/message.html:17
 #: templates/django_knowledge/emails/message.txt:13
@@ -251,9 +251,8 @@ msgid ""
 "        "
 msgstr ""
 "\n"
-"⏎ Ми хотіли, щоб ви знали, нове питання: було додано: \"%(title)s\". Ви "
-"можете побачити його тут: <a href=\"%(domain)s%(url)s\">%(domain)s%(url)s</"
-"a>⏎"
+"Ми хотіли, щоб ви знали, нове питання: було додано: \"%(title)s\". Ви "
+"можете побачити його тут: <a href=\"%(domain)s%(url)s\">%(domain)s%(url)s</a>"
 
 #: templates/django_knowledge/emails/message.html:29
 #: templates/django_knowledge/emails/message.txt:23
@@ -278,7 +277,7 @@ msgid ""
 "    "
 msgstr ""
 "\n"
-"⏎ Ми хотіли, щоб ви знали, нова відповідь на питання була додана \"%(title)s"
+"Ми хотіли, щоб ви знали, нова відповідь на питання була додана \"%(title)s"
 "\". Ви можете побачити її тут: %(domain)s%(url)s⏎"
 
 #: templates/django_knowledge/emails/message.txt:17
@@ -290,8 +289,8 @@ msgid ""
 "    "
 msgstr ""
 "\n"
-"⏎ Ми хотіли, щоб ви знали, нове питання було додано \"%(title)s\". Ви можете "
-"побачити його тут: %(domain)s%(url)s⏎"
+"Ми хотіли, щоб ви знали, нове питання було додано \"%(title)s\". Ви можете "
+"побачити його тут: %(domain)s%(url)s"
 
 #: templates/django_knowledge/emails/message.txt:26
 #, python-format
