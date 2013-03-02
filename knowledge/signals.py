@@ -3,6 +3,7 @@ from knowledge.utils import get_module
 from knowledge import settings
 import logging
 
+
 logger = logging.getLogger(__name__)
 
 def send_alerts(target_dict, response=None, question=None, **kwargs):
