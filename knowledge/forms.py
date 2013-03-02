@@ -60,7 +60,7 @@ def QuestionForm(user, *args, **kwargs):
                     qf.required = False
 
         # honey pot!
-        phone_number = forms.CharField(verbose_name=_('Phone number'), required=False)
+        phone_number = forms.CharField(label=_('Phone number'), required=False)
 
         def clean_user(self):
             return user
@@ -117,7 +117,7 @@ def ResponseForm(user, question, *args, **kwargs):
                     qf.required = False
 
         # honey pot!
-        phone_number = forms.CharField(verbose_name=_('Phone number'), required=False)
+        phone_number = forms.CharField(label=_('Phone number'), required=False)
 
         def clean_user(self):
             return user
