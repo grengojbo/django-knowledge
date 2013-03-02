@@ -203,15 +203,19 @@ def knowledge_ask(request,
     logger.debug("knowledge_ask")
     if settings.LOGIN_REQUIRED and not request.user.is_authenticated():
         return HttpResponseRedirect(settings.LOGIN_URL+"?next=%s" % request.path)
-
+    # TODO: добавить при отправке сплывающая подсказка вам отправлено сообщение....
     if request.method == 'POST':
         form = Form(request.user, request.POST)
         if form and form.is_valid():
-            if request.user.is_authenticated() or not form.cleaned_data['phone_number']:
+            logging.debug(form.cleaned_data)
+            if request.user.is_authenticated():
+                logger.debug("FORM SEND is_authenticated")
                 question = form.save()
                 return redirect(question.get_absolute_url())
             else:
-                return redirect('knowledge_index')
+                logger.debug("FORM NO SEND is_anonymous")
+                question = form.save()
+                return redirect(settings.KN_REDIRECT_PATH)
     else:
         form = Form(request.user)
 
