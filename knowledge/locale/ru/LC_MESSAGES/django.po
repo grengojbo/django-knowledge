@@ -1,7 +1,7 @@
 # Translate Django Knowledge.
 # Copyright (C) 2012 Oleg Dolya
 # This file is distributed under the same license as the DjangoApp package.
-# 
+#
 # Translators:
 #   <oleg.dolya@gmail.com>, 2012.
 # Oleg Dolya <oleg.dolya@gmail.com>, 2012.
@@ -9,110 +9,118 @@ msgid ""
 msgstr ""
 "Project-Id-Version: django-knowledge\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-10-27 22:57+0300\n"
+"POT-Creation-Date: 2013-03-03 01:40+0200\n"
 "PO-Revision-Date: 2012-10-29 16:26+0000\n"
 "Last-Translator: jbo <oleg.dolya@gmail.com>\n"
-"Language-Team: Russian (http://www.transifex.com/projects/p/django-knowledge/language/ru/)\n"
+"Language-Team: Russian (http://www.transifex.com/projects/p/django-knowledge/"
+"language/ru/)\n"
+"Language: ru\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Language: ru\n"
-"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
+"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n"
+"%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
 
-#: forms.py:46 models.py:12
+#: forms.py:50 models.py:13
 msgid "Internal"
 msgstr "Внутренние"
 
-#: models.py:10
+#: forms.py:63 forms.py:121
+msgid "Phone number"
+msgstr ""
+
+#: models.py:11
 msgid "Public"
 msgstr "Публичный"
 
-#: models.py:11
+#: models.py:12
 msgid "Private"
 msgstr "Частные"
 
-#: models.py:17
+#: models.py:18
 msgid "Inherit"
 msgstr "Наследовать"
 
-#: models.py:33
+#: models.py:35
 msgid "Category"
 msgstr "Категория"
 
-#: models.py:34 templates/django_knowledge/sidebar.html:18
+#: models.py:36 templates/django_knowledge/sidebar.html:6
 msgid "Categories"
 msgstr "Категории"
 
-#: models.py:49
+#: models.py:51
 msgid "Alert"
 msgstr "Оповещение"
 
-#: models.py:50
+#: models.py:52
 msgid "Check this if you want to be alerted when a new response is added."
-msgstr "Проверьте это, если вы хотите получить извещение, при добавлении нового ответа."
+msgstr ""
+"Проверьте это, если вы хотите получить извещение, при добавлении нового "
+"ответа."
 
-#: models.py:55
+#: models.py:57
 msgid "Name"
 msgstr "Имя"
 
-#: models.py:56
+#: models.py:58
 msgid "Enter your first and last name."
 msgstr ""
 
-#: models.py:58
+#: models.py:60
 msgid "Email"
 msgstr "Адрес электронной почты"
 
-#: models.py:59
+#: models.py:61
 msgid "Enter a valid email address."
 msgstr "Введите правильный адрес электронной почты."
 
-#: models.py:146 models.py:165
+#: models.py:148 models.py:167
 msgid "Question"
 msgstr "Вопрос"
 
-#: models.py:147
+#: models.py:149
 msgid "Enter your question or suggestion."
 msgstr "Введите ваш вопрос или предложение."
 
-#: models.py:149
+#: models.py:151
 msgid "Description"
 msgstr "Описание"
 
-#: models.py:150
+#: models.py:152
 msgid "Please offer details. Markdown enabled."
 msgstr ""
 
-#: models.py:153 models.py:256
+#: models.py:155 models.py:258
 msgid "Status"
 msgstr "Статус"
 
-#: models.py:166
+#: models.py:168
 msgid "Questions"
 msgstr "Вопросы"
 
-#: models.py:253 models.py:265
+#: models.py:255 models.py:267
 msgid "Response"
 msgstr "Ответ"
 
-#: models.py:254
+#: models.py:256
 msgid "Please enter your response. Markdown enabled."
 msgstr "Пожалуйста, введите ваш ответ. Markdown включен."
 
-#: models.py:266
+#: models.py:268
 msgid "Responses"
 msgstr "Ответы"
 
-#: templates/django_knowledge/ask.html:5 templates/django_knowledge/ask.html:9
+#: templates/django_knowledge/ask.html:3 templates/django_knowledge/ask.html:6
 #: templates/django_knowledge/list.html:42
 msgid "Ask a Question"
 msgstr ""
 
-#: templates/django_knowledge/ask.html:15
+#: templates/django_knowledge/ask.html:12
 msgid "Please log in to ask a question."
 msgstr "Пожалуйста авторизуйтесь чтобы задать вопрос."
 
-#: templates/django_knowledge/form.html:9
+#: templates/django_knowledge/form.html:8
 msgid "required"
 msgstr "обязательно"
 
@@ -126,6 +134,10 @@ msgid "Top %(count)s Questions"
 msgstr ""
 
 #: templates/django_knowledge/inner.html:13
+msgid "Welcome to our Support Center."
+msgstr ""
+
+#: templates/django_knowledge/inner.html:20
 msgid "Start typing your question here."
 msgstr ""
 
@@ -160,21 +172,17 @@ msgstr ""
 msgid "staff"
 msgstr "статус персонала"
 
-#: templates/django_knowledge/sidebar.html:5
+#: templates/django_knowledge/sidebar.html:3
 msgid "My Questions"
 msgstr "Мои действия"
 
-#: templates/django_knowledge/sidebar.html:29
+#: templates/django_knowledge/sidebar.html:8
 msgid "Navigate"
 msgstr ""
 
-#: templates/django_knowledge/sidebar.html:33
+#: templates/django_knowledge/sidebar.html:8
 msgid "Ask a question or give suggestion."
 msgstr ""
-
-#: templates/django_knowledge/sidebar.html:34
-msgid "Return to homepage."
-msgstr "Перейти на домашнию страницу"
 
 #: templates/django_knowledge/thread.html:20
 #: templates/django_knowledge/thread.html:45
@@ -201,11 +209,7 @@ msgstr ""
 msgid "Please log in to respond."
 msgstr ""
 
-#: templates/django_knowledge/welcome.html:4
-msgid "Welcome to our Support Center."
-msgstr ""
-
-#: templates/django_knowledge/welcome.html:5
+#: templates/django_knowledge/welcome.html:3
 msgid "Search for answers to your questions below, or ask your own."
 msgstr ""
 
@@ -219,7 +223,9 @@ msgstr "Здраствуйте %(name)s,"
 #, python-format
 msgid ""
 "\n"
-"        We just wanted to let you know that a new response has been added to the question \"%(title)s\". You can visit it here: <a href=\"%(domain)s%(url)s\">%(domain)s%(url)s</a>.\n"
+"        We just wanted to let you know that a new response has been added to "
+"the question \"%(title)s\". You can visit it here: <a href=\"%(domain)s"
+"%(url)s\">%(domain)s%(url)s</a>.\n"
 "        "
 msgstr ""
 
@@ -234,7 +240,9 @@ msgstr ""
 #, python-format
 msgid ""
 "\n"
-"        We just wanted to let you know that a new question has been added: \"%(title)s\". You can visit it here: <a href=\"%(domain)s%(url)s\">%(domain)s%(url)s</a>\n"
+"        We just wanted to let you know that a new question has been added: "
+"\"%(title)s\". You can visit it here: <a href=\"%(domain)s%(url)s\">"
+"%(domain)s%(url)s</a>\n"
 "        "
 msgstr ""
 
@@ -248,13 +256,16 @@ msgstr ""
 msgid ""
 "Thank you,\n"
 "    %(name)s team"
-msgstr "Спасибо,\n    %(name)s за ваш комментарий"
+msgstr ""
+"Спасибо,\n"
+"    %(name)s за ваш комментарий"
 
 #: templates/django_knowledge/emails/message.txt:7
 #, python-format
 msgid ""
 "\n"
-"    We just wanted to let you know that a new response has been added to the question \"%(title)s\". You can visit it here: %(domain)s%(url)s\n"
+"    We just wanted to let you know that a new response has been added to the "
+"question \"%(title)s\". You can visit it here: %(domain)s%(url)s\n"
 "    "
 msgstr ""
 
@@ -262,7 +273,8 @@ msgstr ""
 #, python-format
 msgid ""
 "\n"
-"    We just wanted to let you know that a new question has been added: \"%(title)s\". You can visit it here: %(domain)s%(url)s\n"
+"    We just wanted to let you know that a new question has been added: "
+"\"%(title)s\". You can visit it here: %(domain)s%(url)s\n"
 "    "
 msgstr ""
 
@@ -271,7 +283,9 @@ msgstr ""
 msgid ""
 "Thank you,\n"
 "%(name)s team"
-msgstr "Спасибо %(name)s,\nза ваш комментарий"
+msgstr ""
+"Спасибо %(name)s,\n"
+"за ваш комментарий"
 
 #: templates/django_knowledge/emails/subject.txt:1
 #, python-format
@@ -282,3 +296,6 @@ msgstr ""
 #, python-format
 msgid "New question \"%(title)s\" on %(name)s."
 msgstr ""
+
+#~ msgid "Return to homepage."
+#~ msgstr "Перейти на домашнию страницу"
