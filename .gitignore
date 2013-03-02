@@ -6,5 +6,5 @@ docs/_build
 
 *.sqlite
 .sass-cache
-
+atlassian-ide-plugin.xml
 tests/reports
