@@ -208,9 +208,11 @@ def knowledge_ask(request,
         form = Form(request.user, request.POST)
         if form and form.is_valid():
             if request.user.is_authenticated() or not form.cleaned_data['phone_number']:
+                logger.debug("FORM SEND ")
                 question = form.save()
                 return redirect(question.get_absolute_url())
             else:
+                logger.debug("FORM NO SEND ")
                 return redirect('knowledge_index')
     else:
         form = Form(request.user)

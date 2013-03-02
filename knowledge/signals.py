@@ -54,7 +54,7 @@ def knowledge_post_save(sender, instance, created, **kwargs):
     from django.contrib.auth.models import User
 
     func = get_module(settings.ALERTS_FUNCTION_PATH)
-
+    logger.debug('SEND knowledge_post_save')
     if settings.ALERTS and created:
         # pull together the out_dict:
         #    {'e@ma.il': ('first last', 'e@ma.il') or <User>}
