@@ -2,6 +2,8 @@
 from knowledge.utils import get_module
 from knowledge import settings
 import logging
+#from models import Category
+
 
 logger = logging.getLogger(__name__)
 
@@ -31,14 +33,11 @@ def send_alerts(target_dict, response=None, question=None, **kwargs):
         }
         logger.debug("Send Message to: {0}".format(email))
 
-        subject = render_to_string(
-            'django_knowledge/emails/subject.txt', context)
+        subject = render_to_string('django_knowledge/emails/subject.txt', context)
 
-        message = render_to_string(
-            'django_knowledge/emails/message.txt', context)
+        message = render_to_string('django_knowledge/emails/message.txt', context)
 
-        message_html = render_to_string(
-            'django_knowledge/emails/message.html', context)
+        message_html = render_to_string('django_knowledge/emails/message.html', context)
 
         msg = EmailMultiAlternatives(subject, message, to=[email])
         msg.attach_alternative(message_html, 'text/html')
@@ -50,7 +49,7 @@ def knowledge_post_save(sender, instance, created, **kwargs):
     Gathers all the responses for the sender's parent question
     and shuttles them to the predefined module.
     """
-    from knowledge.models import Question, Response
+    from knowledge.models import Question, Response, Category
     from django.contrib.auth.models import User
 
     func = get_module(settings.ALERTS_FUNCTION_PATH)
@@ -68,9 +67,10 @@ def knowledge_post_save(sender, instance, created, **kwargs):
 
         elif isinstance(instance, Question):
             # TODO: отправка почты всем is_staff переделать на категории
-            staffers = User.objects.filter(is_staff=True)
-            out_dict = dict([[user.email, user] for user in staffers
-                                if user.has_perm('change_question')])
+            #staffers = User.objects.filter(is_staff=True)
+            #out_dict = dict([[user.email, user] for user in staffers if user.has_perm('change_question')])
+            staffers =Category.objects.select_related().get(pk=1)
+            out_dict = dict([[user['email'], user['username']] for user in staffers.user.values()])
 
         # remove the creator...
         if instance.get_email() in out_dict.keys():

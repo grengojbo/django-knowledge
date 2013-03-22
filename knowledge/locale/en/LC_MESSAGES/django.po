@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-10-27 22:57+0300\n"
+"POT-Creation-Date: 2013-03-03 01:40+0200\n"
 "PO-Revision-Date: 2012-03-15 09:46+0000\n"
 "Last-Translator: Oleg Dolya <oleg.dolya@gmail.com>\n"
 "Language-Team: Russian (http://www.transifex.net/projects/p/django/language/"
@@ -17,100 +17,104 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: forms.py:46 models.py:12
+#: forms.py:50 models.py:13
 msgid "Internal"
 msgstr ""
 
-#: models.py:10
-msgid "Public"
+#: forms.py:63 forms.py:121
+msgid "Phone number"
 msgstr ""
 
 #: models.py:11
+msgid "Public"
+msgstr ""
+
+#: models.py:12
 msgid "Private"
 msgstr ""
 
-#: models.py:17
+#: models.py:18
 msgid "Inherit"
 msgstr ""
 
-#: models.py:33
+#: models.py:35
 msgid "Category"
 msgstr ""
 
-#: models.py:34 templates/django_knowledge/sidebar.html:18
+#: models.py:36 templates/django_knowledge/sidebar.html:6
 msgid "Categories"
 msgstr ""
 
-#: models.py:49
+#: models.py:51
 msgid "Alert"
 msgstr ""
 
-#: models.py:50
+#: models.py:52
 msgid "Check this if you want to be alerted when a new response is added."
 msgstr ""
 
-#: models.py:55
+#: models.py:57
 msgid "Name"
 msgstr ""
 
-#: models.py:56
+#: models.py:58
 msgid "Enter your first and last name."
 msgstr ""
 
-#: models.py:58
+#: models.py:60
 msgid "Email"
 msgstr ""
 
-#: models.py:59
+#: models.py:61
 msgid "Enter a valid email address."
 msgstr ""
 
-#: models.py:146 models.py:165
+#: models.py:148 models.py:167
 msgid "Question"
 msgstr ""
 
-#: models.py:147
+#: models.py:149
 msgid "Enter your question or suggestion."
 msgstr ""
 
-#: models.py:149
+#: models.py:151
 msgid "Description"
 msgstr ""
 
-#: models.py:150
+#: models.py:152
 msgid "Please offer details. Markdown enabled."
 msgstr ""
 
-#: models.py:153 models.py:256
+#: models.py:155 models.py:258
 msgid "Status"
 msgstr ""
 
-#: models.py:166
+#: models.py:168
 msgid "Questions"
 msgstr ""
 
-#: models.py:253 models.py:265
+#: models.py:255 models.py:267
 msgid "Response"
 msgstr ""
 
-#: models.py:254
+#: models.py:256
 msgid "Please enter your response. Markdown enabled."
 msgstr ""
 
-#: models.py:266
+#: models.py:268
 msgid "Responses"
 msgstr ""
 
-#: templates/django_knowledge/ask.html:5 templates/django_knowledge/ask.html:9
+#: templates/django_knowledge/ask.html:3 templates/django_knowledge/ask.html:6
 #: templates/django_knowledge/list.html:42
 msgid "Ask a Question"
 msgstr ""
 
-#: templates/django_knowledge/ask.html:15
+#: templates/django_knowledge/ask.html:12
 msgid "Please log in to ask a question."
 msgstr ""
 
-#: templates/django_knowledge/form.html:9
+#: templates/django_knowledge/form.html:8
 msgid "required"
 msgstr ""
 
@@ -124,6 +128,10 @@ msgid "Top %(count)s Questions"
 msgstr ""
 
 #: templates/django_knowledge/inner.html:13
+msgid "Welcome to our Support Center."
+msgstr ""
+
+#: templates/django_knowledge/inner.html:20
 msgid "Start typing your question here."
 msgstr ""
 
@@ -158,20 +166,16 @@ msgstr ""
 msgid "staff"
 msgstr ""
 
-#: templates/django_knowledge/sidebar.html:5
+#: templates/django_knowledge/sidebar.html:3
 msgid "My Questions"
 msgstr ""
 
-#: templates/django_knowledge/sidebar.html:29
+#: templates/django_knowledge/sidebar.html:8
 msgid "Navigate"
 msgstr ""
 
-#: templates/django_knowledge/sidebar.html:33
+#: templates/django_knowledge/sidebar.html:8
 msgid "Ask a question or give suggestion."
-msgstr ""
-
-#: templates/django_knowledge/sidebar.html:34
-msgid "Return to homepage."
 msgstr ""
 
 #: templates/django_knowledge/thread.html:20
@@ -199,11 +203,7 @@ msgstr ""
 msgid "Please log in to respond."
 msgstr ""
 
-#: templates/django_knowledge/welcome.html:4
-msgid "Welcome to our Support Center."
-msgstr ""
-
-#: templates/django_knowledge/welcome.html:5
+#: templates/django_knowledge/welcome.html:3
 msgid "Search for answers to your questions below, or ask your own."
 msgstr ""
 

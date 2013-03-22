@@ -1,14 +1,14 @@
 # -*- mode: python; coding: utf-8; -*-
 from django import forms
 from django.utils.translation import ugettext_lazy as _
-
+from captcha.fields import ReCaptchaField
 from knowledge import settings
 from knowledge.models import Question, Response
 import logging
 # Get an instance of a logger
 logger = logging.getLogger(__name__)
 
-OPTIONAL_FIELDS = ['alert', 'phone_number']
+OPTIONAL_FIELDS = ['alert', 'phone_number', 'captcha']
 
 
 __todo__ = """
@@ -60,7 +60,8 @@ def QuestionForm(user, *args, **kwargs):
                     qf.required = False
 
         # honey pot!
-        phone_number = forms.CharField(verbose_name=_('Phone number'), required=False)
+        phone_number = forms.CharField(label=_('Phone number'), required=False)
+        captcha = ReCaptchaField(attrs={'theme': 'clean', 'lang': 'ru'})
 
         def clean_user(self):
             return user
@@ -117,7 +118,8 @@ def ResponseForm(user, question, *args, **kwargs):
                     qf.required = False
 
         # honey pot!
-        phone_number = forms.CharField(verbose_name=_('Phone number'), required=False)
+        phone_number = forms.CharField(label=_('Phone number'), required=False)
+        captcha = ReCaptchaField(attrs={'theme': 'clean', 'lang': 'ru'})
 
         def clean_user(self):
             return user
