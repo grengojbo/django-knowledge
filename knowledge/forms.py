@@ -9,7 +9,7 @@ from knowledge.models import Category
 # Get an instance of a logger
 logger = logging.getLogger(__name__)
 
-OPTIONAL_FIELDS = ['alert', 'phone_number']
+OPTIONAL_FIELDS = ['alert', 'phone_number', 'categories']
 
 
 __todo__ = """
@@ -29,9 +29,9 @@ def QuestionForm(user, *args, **kwargs):
         if not settings.ALLOW_ANONYMOUS:
             return None
         else:
-            selected_fields = ['name', 'email', 'title', 'body']
+            selected_fields = ['name', 'email', 'title', 'body', 'phone_number']
     else:
-        selected_fields = ['user', 'title', 'body', 'status']
+        selected_fields = ['user', 'title', 'body', 'status', 'phone_number']
 
     if settings.ALERTS:
         selected_fields += ['alert']
@@ -61,7 +61,7 @@ def QuestionForm(user, *args, **kwargs):
                     qf.required = False
 
         # honey pot!
-        phone_number = forms.CharField(label=_('Phone number'), required=False)
+        #phone_number = forms.CharField(label=_('Phone number'), required=False)
         captcha = ReCaptchaField(attrs={'theme': 'clean', 'lang': 'ru'})
 
         def clean_user(self):
@@ -117,8 +117,8 @@ def QuestionAskForm(user, *args, **kwargs):
                     qf.required = False
 
         # honey pot!
-        phone_number = forms.CharField(label=_('Phone number'), required=False)
-        #captcha = ReCaptchaField(attrs={'theme': 'clean', 'lang': 'ru'})
+        #phone_number = forms.CharField(label=_('Phone number'), required=False)
+        captcha = ReCaptchaField(attrs={'theme': 'clean', 'lang': 'ru'})
         #categories = forms.MultipleChoiceField(choices=CAT_CHOICES, required=True)
         #categories = forms.ChoiceField(choices=Category.objects.values_list('id','title'), required=True)
         #categories = forms.MultipleHiddenInput(choices=Category.objects.all())

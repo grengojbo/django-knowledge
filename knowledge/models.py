@@ -160,6 +160,7 @@ class Question(KnowledgeBase):
 
     #categories = models.ManyToManyField('knowledge.Category', blank=True, null=True)
     categories = models.ForeignKey('knowledge.Category', verbose_name=_(u'Category'), blank=True, null=True)
+    phone_number = models.CharField(_('Phone number'), blank=True, null=True, max_length=15)
 
     objects = QuestionManager()
 

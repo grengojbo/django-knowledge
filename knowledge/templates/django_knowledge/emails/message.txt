@@ -18,8 +18,8 @@
     We just wanted to let you know that a new question has been added: "{{ title }}". You can visit it here: {{ domain }}{{ url }}
     {% endblocktrans %}
   
-   {{ question.email }} =
-   {{ question.phone_number }}
+    {% trans 'Email' %}: {{ question.email }}
+    {% trans 'Phone number' %}: {{ question.phone_number }}
 
     {{ question.body }}
 
