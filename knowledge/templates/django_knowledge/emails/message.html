@@ -21,8 +21,9 @@
         <p>{% blocktrans with url=question.url title=question.title domain=site.domain %}
         We just wanted to let you know that a new question has been added: "{{ title }}". You can visit it here: <a href="{{ domain }}{{ url }}">{{ domain }}{{ url }}</a>
         {% endblocktrans %}</p>
-        <p>Email: {{ question.email }}</p>
 
+      <p> {{ question.email }} ---
+        {{ question.phone_number }}</p>
         <div style="background:#f3f3f3;margin:8px 0;padding:12px 18px">
             {{ question.body|striptags|markdown }}
         </div>
