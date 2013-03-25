@@ -17,6 +17,7 @@
     {% blocktrans with url=question.url title=question.title domain=site.domain %}
     We just wanted to let you know that a new question has been added: "{{ title }}". You can visit it here: {{ domain }}{{ url }}
     {% endblocktrans %}
+    {{ question.email }}
 
     {{ question.body }}
 
