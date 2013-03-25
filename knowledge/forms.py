@@ -9,7 +9,7 @@ from knowledge.models import Category
 # Get an instance of a logger
 logger = logging.getLogger(__name__)
 
-OPTIONAL_FIELDS = ['alert', 'phone_number', 'categories']
+OPTIONAL_FIELDS = ['alert', 'phone_number']
 
 
 __todo__ = """
