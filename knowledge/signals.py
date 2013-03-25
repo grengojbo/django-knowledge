@@ -69,7 +69,7 @@ def knowledge_post_save(sender, instance, created, **kwargs):
             # TODO: отправка почты всем is_staff переделать на категории
             #staffers = User.objects.filter(is_staff=True)
             #out_dict = dict([[user.email, user] for user in staffers if user.has_perm('change_question')])
-            logger.debug(instance.categories)
+            logger.debug('>>> categories.id={0}'.format(instance.categories.id))
             staffers =Category.objects.select_related().get(pk=1)
             out_dict = dict([[user['email'], user['username']] for user in staffers.user.values()])
 

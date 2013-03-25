@@ -158,7 +158,8 @@ class Question(KnowledgeBase):
 
     locked = models.BooleanField(default=False)
 
-    categories = models.ManyToManyField('knowledge.Category', blank=True, null=True)
+    #categories = models.ManyToManyField('knowledge.Category', blank=True, null=True)
+    categories = models.ForeignKey('knowledge.Category', verbose_name=_(u'Category'), blank=True, null=True)
 
     objects = QuestionManager()
 
