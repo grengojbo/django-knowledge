@@ -5,6 +5,7 @@ from captcha.fields import ReCaptchaField
 from knowledge import settings
 from knowledge.models import Question, Response
 import logging
+from knowledge.models import Category
 # Get an instance of a logger
 logger = logging.getLogger(__name__)
 
@@ -78,7 +79,8 @@ def QuestionAskForm(user, *args, **kwargs):
     Build and return the appropriate form depending
     on the status of the passed in user.
     """
-
+    logger.debug(">>>>> QuestionAskForm ")
+    #logger.debug("lot_form: {0}".format(f))
     if user.is_anonymous():
         if not settings.ALLOW_ANONYMOUS:
             return None
@@ -116,8 +118,12 @@ def QuestionAskForm(user, *args, **kwargs):
 
         # honey pot!
         phone_number = forms.CharField(label=_('Phone number'), required=False)
-        captcha = ReCaptchaField(attrs={'theme': 'clean', 'lang': 'ru'})
-        categories = forms.HiddenInput(value=2)
+        #captcha = ReCaptchaField(attrs={'theme': 'clean', 'lang': 'ru'})
+        CAT_CHOICES = ((1, '111'),(2, '222'),)
+        #categories = forms.MultipleChoiceField(choices=CAT_CHOICES, required=True)
+        categories = forms.MultipleChoiceField(choices=Category.objects.values_list('id','title'), required=True)
+        #categories = forms.MultipleHiddenInput(choices=Category.objects.all())
+        #categories = forms.HiddenInput(initial=2)
 
         def clean_user(self):
             return user
