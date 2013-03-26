@@ -158,7 +158,9 @@ class Question(KnowledgeBase):
 
     locked = models.BooleanField(default=False)
 
-    categories = models.ManyToManyField('knowledge.Category', blank=True, null=True)
+    #categories = models.ManyToManyField('knowledge.Category', blank=True, null=True)
+    categories = models.ForeignKey('knowledge.Category', verbose_name=_(u'Category'), blank=True, null=True)
+    phone_number = models.CharField(_('Phone number'), blank=True, null=True, max_length=15)
 
     objects = QuestionManager()
 
@@ -169,6 +171,9 @@ class Question(KnowledgeBase):
 
     def __unicode__(self):
         return self.title
+
+    def get_cat(self):
+        return self.categories
 
     @models.permalink
     def get_absolute_url(self):

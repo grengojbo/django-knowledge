@@ -8,7 +8,7 @@ from django.db.models import Q
 from django.views import generic
 
 from knowledge.models import Question, Response, Category
-from knowledge.forms import QuestionForm, ResponseForm
+from knowledge.forms import QuestionForm, ResponseForm, QuestionAskForm
 from knowledge.utils import paginate
 import logging
 # Get an instance of a logger
@@ -199,13 +199,17 @@ def knowledge_moderate(
 
 def knowledge_ask(request,
                   template='django_knowledge/ask.html',
-                  Form=QuestionForm):
+                  Form=QuestionForm, forms=None):
     logger.debug("knowledge_ask")
     if settings.LOGIN_REQUIRED and not request.user.is_authenticated():
         return HttpResponseRedirect(settings.LOGIN_URL + "?next=%s" % request.path)
         # TODO: добавить при отправке сплывающая подсказка вам отправлено сообщение....
     if request.method == 'POST':
-        form = Form(request.user, request.POST)
+        if forms == 'QuestionAskForm':
+            form = QuestionAskForm(request.user, request.POST)
+        else:
+            form = QuestionForm(request.user, request.POST)
+        #form = Form(request.user, request.POST)
         if form and form.is_valid():
             logging.debug(form.cleaned_data)
             if request.user.is_authenticated():
@@ -217,7 +221,11 @@ def knowledge_ask(request,
                 question = form.save()
                 return redirect(settings.KN_REDIRECT_PATH)
     else:
-        form = Form(request.user)
+        if forms == 'QuestionAskForm':
+            form = QuestionAskForm(request.user)
+        else:
+            form = QuestionForm(request.user)
+        #form = Form(request.user)
 
     return render(request, template, {
         'request': request,
