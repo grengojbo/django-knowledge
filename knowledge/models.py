@@ -44,28 +44,17 @@ class KnowledgeBase(models.Model):
 
     added = models.DateTimeField(auto_now_add=True)
     lastchanged = models.DateTimeField(auto_now=True)
-
-    user = models.ForeignKey('auth.User', blank=True,
-                             null=True, db_index=True)
-    alert = models.BooleanField(default=settings.ALERTS,
-        verbose_name=_('Alert'),
-        help_text=_('Check this if you want to be alerted when a new'
-                        ' response is added.'))
-
+    user = models.ForeignKey('auth.User', blank=True, null=True, db_index=True)
+    alert = models.BooleanField(default=settings.ALERTS, verbose_name=_('Alert'), help_text=_('Check this if you want to be alerted when a new response is added.'))
     # for anonymous posting, if permitted
-    name = models.CharField(max_length=64, blank=True, null=True,
-        verbose_name=_('Name'),
-        help_text=_('Enter your first and last name.'))
-    email = models.EmailField(blank=True, null=True,
-        verbose_name=_('Email'),
-        help_text=_('Enter a valid email address.'))
+    name = models.CharField(max_length=64, blank=True, null=True, verbose_name=_('Name'), help_text=_('Enter your first and last name.'))
+    email = models.EmailField(blank=True, null=True, verbose_name=_('Email'), help_text=_('Enter a valid email address.'))
 
     class Meta:
         abstract = True
 
     def save(self, *args, **kwargs):
-        if not self.user and self.name and self.email \
-                and not self.id:
+        if not self.user and self.name and self.email and not self.id:
             # first time because no id
             self.public(save=False)
 
@@ -144,20 +133,10 @@ class Question(KnowledgeBase):
     is_question = True
     _requesting_user = None
 
-    title = models.CharField(max_length=255,
-        verbose_name=_('Question'),
-        help_text=_('Enter your question or suggestion.'))
-    body = models.TextField(blank=True, null=True,
-        verbose_name=_('Description'),
-        help_text=_('Please offer details. Markdown enabled.'))
-
-    status = models.CharField(
-        verbose_name=_('Status'),
-        max_length=32, choices=STATUSES,
-        default='private', db_index=True)
-
+    title = models.CharField(max_length=255, verbose_name=_('Question'), help_text=_('Enter your question or suggestion.'))
+    body = models.TextField(blank=True, null=True, verbose_name=_('Description'), help_text=_('Please offer details. Markdown enabled.'))
+    status = models.CharField(verbose_name=_('Status'), max_length=32, choices=STATUSES, default='private', db_index=True)
     locked = models.BooleanField(default=False)
-
     #categories = models.ManyToManyField('knowledge.Category', blank=True, null=True)
     categories = models.ForeignKey('knowledge.Category', verbose_name=_(u'Category'), blank=True, null=True)
     phone_number = models.CharField(_('Phone number'), blank=True, null=True, max_length=15)
@@ -253,16 +232,9 @@ class Question(KnowledgeBase):
 class Response(KnowledgeBase):
     is_response = True
 
-    question = models.ForeignKey('knowledge.Question',
-        related_name='responses')
-
-    body = models.TextField(blank=True, null=True,
-        verbose_name=_('Response'),
-        help_text=_('Please enter your response. Markdown enabled.'))
-    status = models.CharField(
-        verbose_name=_('Status'),
-        max_length=32, choices=STATUSES_EXTENDED,
-        default='inherit', db_index=True)
+    question = models.ForeignKey('knowledge.Question', related_name='responses')
+    body = models.TextField(blank=True, null=True, verbose_name=_('Response'), help_text=_('Please enter your response. Markdown enabled.'))
+    status = models.CharField(verbose_name=_('Status'), max_length=32, choices=STATUSES_EXTENDED, default='inherit', db_index=True)
     accepted = models.BooleanField(default=False)
 
     objects = ResponseManager()
@@ -294,7 +266,8 @@ def attachment_path(instance, filename):
     import os
     from django.conf import settings
     os.umask(0)
-    path = 'helpdesk/attachments/%s/%s' % (instance.followup.ticket.ticket_for_url, instance.followup.id )
+    #path = 'attachments/{0}/{1}'.format(instance.followup.ticket.ticket_for_url, instance.followup.id)
+    path = 'attachments'
     att_path = os.path.join(settings.MEDIA_ROOT, path)
     if not os.path.exists(att_path):
         os.makedirs(att_path, 0777)
@@ -309,14 +282,8 @@ class Attachment(models.Model):
 
     file = models.FileField(_('File'), upload_to=attachment_path)
     filename = models.CharField(_('Filename'), max_length=100)
-    mime_type = models.CharField(
-        _('MIME Type'),
-        max_length=255,
-        )
-    size = models.IntegerField(
-        _('Size'),
-        help_text=_('Size of this file in bytes'),
-        )
+    mime_type = models.CharField(_('MIME Type'), max_length=255)
+    size = models.IntegerField(_('Size'), help_text=_('Size of this file in bytes'))
 
     # def get_upload_to(self, field_attname):
     #     """ Get upload_to path specific to this item """
@@ -335,10 +302,6 @@ class Attachment(models.Model):
         ordering = ['filename']
         verbose_name = _(u'Attachment')
         verbose_name_plural = _(u'Attachment')
-
-
-
-
 
 # cannot attach on abstract = True... derp
 models.signals.post_save.connect(knowledge_post_save, sender=Question)
