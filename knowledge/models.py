@@ -286,6 +286,60 @@ class Response(KnowledgeBase):
     accept.alters_data = True
 
 
+def attachment_path(instance, filename):
+    """
+    Provide a file path that will help prevent files being overwritten, by
+    putting attachments in a folder off attachments for ticket/followup_id/.
+    """
+    import os
+    from django.conf import settings
+    os.umask(0)
+    path = 'helpdesk/attachments/%s/%s' % (instance.followup.ticket.ticket_for_url, instance.followup.id )
+    att_path = os.path.join(settings.MEDIA_ROOT, path)
+    if not os.path.exists(att_path):
+        os.makedirs(att_path, 0777)
+    return os.path.join(path, filename)
+
+
+class Attachment(models.Model):
+    """
+    Represents a file attached to a follow-up. This could come from an e-mail
+    attachment, or it could be uploaded via the web interface.
+    """
+
+    file = models.FileField(_('File'), upload_to=attachment_path)
+    filename = models.CharField(_('Filename'), max_length=100)
+    mime_type = models.CharField(
+        _('MIME Type'),
+        max_length=255,
+        )
+    size = models.IntegerField(
+        _('Size'),
+        help_text=_('Size of this file in bytes'),
+        )
+
+    # def get_upload_to(self, field_attname):
+    #     """ Get upload_to path specific to this item """
+    #     if not self.id:
+    #         return u''
+    #     return u'helpdesk/attachments/%s/%s' % (
+    #         self.followup.ticket.ticket_for_url,
+    #         self.followup.id
+    #         )
+
+    def __unicode__(self):
+        return u'%s' % self.filename
+
+    class Meta:
+        db_table = 'attachments'
+        ordering = ['filename']
+        verbose_name = _(u'Attachment')
+        verbose_name_plural = _(u'Attachment')
+
+
+
+
+
 # cannot attach on abstract = True... derp
 models.signals.post_save.connect(knowledge_post_save, sender=Question)
 models.signals.post_save.connect(knowledge_post_save, sender=Response)
