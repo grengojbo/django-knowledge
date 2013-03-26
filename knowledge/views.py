@@ -5,6 +5,7 @@ from django.http import Http404, HttpResponseRedirect
 from django.shortcuts import render, redirect, get_object_or_404
 from django.core.urlresolvers import reverse, NoReverseMatch
 from django.db.models import Q
+from django.views import generic
 
 from knowledge.models import Question, Response, Category
 from knowledge.forms import QuestionForm, ResponseForm
@@ -30,71 +31,66 @@ ALLOWED_MODS = {
 def get_my_questions(request):
     logger.debug("viev get_my_questions")
     if settings.LOGIN_REQUIRED and not request.user.is_authenticated():
-        return HttpResponseRedirect(settings.LOGIN_URL+"?next=%s" % request.path)
+        return HttpResponseRedirect(settings.LOGIN_URL + "?next=%s" % request.path)
 
     if request.user.is_anonymous():
-        return None
-    else:
-        return Question.objects.can_view(request.user)\
-                               .filter(user=request.user)
+        return Question.objects.none()
+    return Question.objects.can_view(request.user) \
+        .filter(user=request.user)
 
 
-def knowledge_index(request,
-                    template='django_knowledge/index.html'):
-    logger.debug("viev knowledge_index")
-    if settings.LOGIN_REQUIRED and not request.user.is_authenticated():
-        return HttpResponseRedirect(settings.LOGIN_URL+"?next=%s" % request.path)
+class KnowledgeBase(object):
+    """ Base class for knowledge views"""
 
-    questions = Question.objects.can_view(request.user)\
-                                .prefetch_related('responses__question')[0:20]
-    # this is for get_responses()
-    [setattr(q, '_requesting_user', request.user) for q in questions]
-
-    return render(request, template, {
-        'request': request,
-        'questions': questions,
-        'my_questions': get_my_questions(request),
-        'categories': Category.objects.all()
-    })
+    def get_my_questions(self):
+        if self.request.user.is_anonymous():
+            return Question.objects.none()
+        return Question.objects.can_view(self.request.user) \
+            .filter(user=self.request.user)
 
 
-def knowledge_list(request,
-                   category_slug=None,
-                   template='django_knowledge/list.html',
-                   Form=QuestionForm):
-    logger.debug("viev knowledge_list")
-    if settings.LOGIN_REQUIRED and not request.user.is_authenticated():
-        return HttpResponseRedirect(settings.LOGIN_URL+"?next=%s" % request.path)
+class KnowledgeIndex(generic.ListView, KnowledgeBase):
+    """ Index page for """
+    template_name = 'django_knowledge/index.html'
+    context_object_name = 'questions'
 
-    search = request.GET.get('title', None)
-    questions = Question.objects.can_view(request.user)\
-                                .prefetch_related('responses__question')
+    def get_queryset(self, *args, **kwargs):
+        return self.get_my_questions()
 
-    if search:
-        questions = questions.filter(
-            Q(title__icontains=search) | Q(body__icontains=search)
-        )
+    def get_context_data(self, *args, **kwargs):
+        context = super(KnowledgeIndex, self).get_context_data(*args,
+                                                               **kwargs)
+        context['my_questions'] = self.get_my_questions()
+        context['categories'] = Category.objects.all()
+        return context
 
-    category = None
-    if category_slug:
-        category = get_object_or_404(Category, slug=category_slug)
-        questions = questions.filter(categories=category)
 
-    paginator, questions = paginate(questions,
-                                    50,
-                                    request.GET.get('page', '1'))
-    # this is for get_responses()
-    [setattr(q, '_requesting_user', request.user) for q in questions]
+class KnowledgeList(generic.ListView, KnowledgeBase):
+    template_name = 'django_knowledge/list.html'
+    context_object_name = 'questions'
 
-    return render(request, template, {
-        'request': request,
-        'search': search,
-        'questions': questions,
-        'my_questions': get_my_questions(request),
-        'category': category,
-        'categories': Category.objects.all(),
-        'form': Form(request.user, initial={'title': search})  # prefill title
-    })
+    def get_queryset(self, *args, **kwargs):
+        qs = Question.objects.can_view(self.request.user)
+        search = self.request.GET.get('title', None)
+
+        if search:
+            qs = qs.filter(
+                Q(title__icontains=search) | Q(body__icontains=search))
+
+        if self.kwargs.get('category_slug', None):
+            category = get_object_or_404(Category,
+                                         slug=self.kwargs['category_slug'])
+            qs = qs.filter(categories=category)
+        return qs
+
+    def get_context_data(self, **kwargs):
+        context = super(KnowledgeList, self).get_context_data(**kwargs)
+        context['search'] = self.request.GET.get('title', None)
+        context['my_questions'] = self.get_my_questions()
+        context['categories'] = Category.objects.all()
+        context['form'] = QuestionForm(
+            self.request.user, initial={'title': context['search']})
+        return context
 
 
 def knowledge_thread(request,
@@ -104,14 +100,14 @@ def knowledge_thread(request,
                      Form=ResponseForm):
     logger.debug("viev django_knowledge/thread.html")
     if settings.LOGIN_REQUIRED and not request.user.is_authenticated():
-        return HttpResponseRedirect(settings.LOGIN_URL+"?next=%s" % request.path)
+        return HttpResponseRedirect(settings.LOGIN_URL + "?next=%s" % request.path)
 
     try:
-        question = Question.objects.can_view(request.user)\
-                                   .get(id=question_id)
+        question = Question.objects.can_view(request.user) \
+            .get(id=question_id)
     except Question.DoesNotExist:
         if Question.objects.filter(id=question_id).exists() and \
-                                hasattr(settings, 'LOGIN_REDIRECT_URL'):
+                hasattr(settings, 'LOGIN_REDIRECT_URL'):
             return redirect(settings.LOGIN_REDIRECT_URL)
         else:
             raise Http404
@@ -147,11 +143,15 @@ def knowledge_moderate(
         model,
         mod,
         allowed_mods=ALLOWED_MODS):
-
     """
     An easy to extend method to moderate questions
     and responses in a vaguely RESTful way.
 
+    :param request:
+    :param lookup_id:
+    :param model:
+    :param mod:
+    :param allowed_mods:
     Usage:
         /knowledge/moderate/question/1/inherit/     -> 404
         /knowledge/moderate/question/1/public/      -> 200
@@ -162,7 +162,7 @@ def knowledge_moderate(
     """
     logger.debug("viev knowledge_moderate")
     if settings.LOGIN_REQUIRED and not request.user.is_authenticated():
-        return HttpResponseRedirect(settings.LOGIN_URL+"?next=%s" % request.path)
+        return HttpResponseRedirect(settings.LOGIN_URL + "?next=%s" % request.path)
 
     if request.method != 'POST':
         raise Http404
@@ -202,8 +202,8 @@ def knowledge_ask(request,
                   Form=QuestionForm):
     logger.debug("knowledge_ask")
     if settings.LOGIN_REQUIRED and not request.user.is_authenticated():
-        return HttpResponseRedirect(settings.LOGIN_URL+"?next=%s" % request.path)
-    # TODO: добавить при отправке сплывающая подсказка вам отправлено сообщение....
+        return HttpResponseRedirect(settings.LOGIN_URL + "?next=%s" % request.path)
+        # TODO: добавить при отправке сплывающая подсказка вам отправлено сообщение....
     if request.method == 'POST':
         form = Form(request.user, request.POST)
         if form and form.is_valid():
