@@ -45,8 +45,7 @@ class KnowledgeBase(object):
     def get_my_questions(self):
         if self.request.user.is_anonymous():
             return Question.objects.none()
-        return Question.objects.can_view(self.request.user) \
-            .filter(user=self.request.user)
+        return Question.objects.can_view(self.request.user).filter(user=self.request.user)
 
 
 class KnowledgeIndex(generic.ListView, KnowledgeBase):
@@ -58,10 +57,9 @@ class KnowledgeIndex(generic.ListView, KnowledgeBase):
         return self.get_my_questions()
 
     def get_context_data(self, *args, **kwargs):
-        context = super(KnowledgeIndex, self).get_context_data(*args,
-                                                               **kwargs)
+        context = super(KnowledgeIndex, self).get_context_data(*args, **kwargs)
         context['my_questions'] = self.get_my_questions()
-        context['categories'] = Category.objects.all()
+        context['categories'] = Category.objects.all().cache()
         return context
 
 

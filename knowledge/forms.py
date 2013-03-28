@@ -3,9 +3,10 @@ from django import forms
 from django.utils.translation import ugettext_lazy as _
 from captcha.fields import ReCaptchaField
 from knowledge import settings
-from knowledge.models import Question, Response
+from knowledge.models import Question, Response, Category
+
 import logging
-from knowledge.models import Category
+
 # Get an instance of a logger
 logger = logging.getLogger(__name__)
 
@@ -62,7 +63,8 @@ def QuestionForm(user, *args, **kwargs):
 
         # honey pot!
         #phone_number = forms.CharField(label=_('Phone number'), required=False)
-        captcha = ReCaptchaField(attrs={'theme': 'clean', 'lang': 'ru'})
+        if user.is_anonymous():
+            captcha = ReCaptchaField(attrs={'theme': 'clean', 'lang': 'ru'})
 
         def clean_user(self):
             return user
@@ -118,7 +120,8 @@ def QuestionAskForm(user, *args, **kwargs):
 
         # honey pot!
         #phone_number = forms.CharField(label=_('Phone number'), required=False)
-        captcha = ReCaptchaField(attrs={'theme': 'clean', 'lang': 'ru'})
+        if user.is_anonymous():
+            captcha = ReCaptchaField(attrs={'theme': 'clean', 'lang': 'ru'})
         #categories = forms.MultipleChoiceField(choices=CAT_CHOICES, required=True)
         #categories = forms.ChoiceField(choices=Category.objects.values_list('id','title'), required=True)
         #categories = forms.MultipleHiddenInput(choices=Category.objects.all())
@@ -204,8 +207,8 @@ def ResponseForm(user, question, *args, **kwargs):
                     qf.required = False
 
         # honey pot!
-        phone_number = forms.CharField(label=_('Phone number'), required=False)
-        captcha = ReCaptchaField(attrs={'theme': 'clean', 'lang': 'ru'})
+        if user.is_anonymous():
+            captcha = ReCaptchaField(attrs={'theme': 'clean', 'lang': 'ru'})
 
         def clean_user(self):
             return user
