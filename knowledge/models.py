@@ -1,8 +1,11 @@
 # -*- mode: python; coding: utf-8; -*-
 from knowledge import settings
 from django.contrib.auth.models import User
+
+import django
 from django.db import models
 from django.utils.translation import ugettext_lazy as _
+from django.conf import settings as django_settings
 
 from knowledge.managers import QuestionManager, ResponseManager
 from knowledge.signals import knowledge_post_save
@@ -75,7 +78,7 @@ class KnowledgeBase(models.Model):
         name = (self.name or u'{0} {1}'.format(self.user.first_name, self.user.last_name))
         return name.strip() or self.user.username
 
-    get_email = lambda s: s.email or s.user.email
+    get_email = lambda s: s.email or (s.user and s.user.email)
     get_pair = lambda s: (s.get_name(), s.get_email())
     get_user_or_pair = lambda s: s.user or s.get_pair()
 
@@ -110,6 +113,7 @@ class KnowledgeBase(models.Model):
         self.status = status
         if save:
             self.save()
+    switch.alters_data = True
 
     def public(self, save=True):
         self.switch('public', save)
@@ -181,9 +185,9 @@ class Question(KnowledgeBase):
     def get_responses(self, user=None):
         user = user or self._requesting_user
         if user:
-            return [r for r in self.responses.all() if r.can_view(user)]
+            return [r for r in self.responses.all().select_related('user') if r.can_view(user)]
         else:
-            return self.responses.all()
+            return self.responses.all().select_related('user')
 
     def answered(self):
         """
