@@ -1,4 +1,4 @@
-from distutils.core import setup # setuptools breaks
+from distutils.core import setup  # setuptools breaks
 
 # Dynamically calculate the version based on knowledge.VERSION
 version_tuple = __import__('knowledge').VERSION
