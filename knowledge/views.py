@@ -195,7 +195,7 @@ def knowledge_moderate(
         return redirect(reverse('knowledge_index'))
 
 
-def knowledge_ask(request,
+def knowledge_ask(request, page='asc',
                   template='django_knowledge/ask.html',
                   Form=QuestionForm, forms=None):
     logger.debug("knowledge_ask")
@@ -227,6 +227,7 @@ def knowledge_ask(request,
 
     return render(request, template, {
         'request': request,
+        'page': page,
         'my_questions': get_my_questions(request),
         'form': form,
         'categories': Category.objects.all()

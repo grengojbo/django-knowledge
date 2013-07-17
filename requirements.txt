@@ -7,3 +7,4 @@ django-coverage
 django-debug-toolbar
 pep8
 pylint
+django-recaptcha
