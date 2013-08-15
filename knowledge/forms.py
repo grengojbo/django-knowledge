@@ -10,7 +10,7 @@ import logging
 # Get an instance of a logger
 logger = logging.getLogger(__name__)
 
-OPTIONAL_FIELDS = ['alert', 'phone_number']
+OPTIONAL_FIELDS = ['alert', 'categories', 'phone_number']
 
 
 __todo__ = """
@@ -173,9 +173,9 @@ def ShopAskForm(user=None, *args, **kwargs):
         if not settings.ALLOW_ANONYMOUS:
             return None
         else:
-            selected_fields = ['name', 'email', 'activities', 'body', 'categories', 'phone_number', 'company', 'trading', 'areea_leasse', 'date_leasse', 'range_of_goods', 'trademarks']
+            selected_fields = ['name', 'email', 'activities', 'body', 'phone_number', 'company', 'trading', 'areea_leasse', 'date_leasse', 'range_of_goods', 'trademarks']
     else:
-        selected_fields = ['user', 'activities',  'body', 'categories', 'phone_number', 'company', 'trading', 'areea_leasse', 'date_leasse', 'range_of_goods', 'trademarks']
+        selected_fields = ['user', 'activities',  'body', 'phone_number', 'company', 'trading', 'areea_leasse', 'date_leasse', 'range_of_goods', 'trademarks']
 
     if settings.ALERTS:
         selected_fields += ['alert']
@@ -203,6 +203,12 @@ def ShopAskForm(user=None, *args, **kwargs):
                 if qf:
                     qf.widget = qf.hidden_widget()
                     qf.required = False
+
+            # self.fields['title'] = self.fields.get('title', title)
+            # self.fields['categories'] = self.fields.get('categories', curent_cat)
+            logger.debug("FIELD title: {0}".format(self.fields.get('title', None)))
+            logger.debug("FIELD categories: {0}".format(self.fields.get('categories', None)))
+            # logger.debug("FIELD initial: {0}".format(initial))
 
         # honey pot!
         #phone_number = forms.CharField(label=_('Phone number'), required=False)

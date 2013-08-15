@@ -29,6 +29,13 @@ class Category(models.Model):
     title = models.CharField(max_length=255)
     slug = models.SlugField(unique=True)
     user = models.ManyToManyField(User, blank=True, null=True)
+    tpl_subject = models.CharField(verbose_name=_(u'Шаблон заголовку'), max_length=255, default='subject.txt',
+                                   help_text=_('папка с шаблон templates/django_knowledge/emails/'))
+    tpl_message = models.CharField(verbose_name=_(u'Шаблон повідомлення'), max_length=255, default='message.txt',
+                                   help_text=_('папка с шаблон templates/django_knowledge/emails/'))
+    tpl_message_html = models.CharField(verbose_name=_(u'Шаблон повідомлення HTML'), max_length=255,
+                                        default='message.html',
+                                        help_text=_('папка с шаблон templates/django_knowledge/emails/'))
 
     def __unicode__(self):
         return u"{0}".format(self.title)

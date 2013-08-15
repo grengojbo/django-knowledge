@@ -9,7 +9,7 @@ from django.views import generic
 
 from knowledge.models import Question, Response, Category
 from knowledge.forms import QuestionForm, ResponseForm, QuestionAskForm, ShopAskForm
-from knowledge.utils import paginate
+from knowledge.utils import send_mail_full
 from fiber.views import FiberPageMixin
 from fiber.models import Page
 import logging
@@ -213,30 +213,42 @@ def knowledge_ask(request, page='asc',
         if forms == 'QuestionAskForm':
             form = QuestionAskForm(request.user, request.POST)
         elif forms == 'ShopAskForm':
-            form = ShopAskForm(request.user, request.POST)
-            form.title = cur_cat.title
-            form.categories = curent_cat
-            logger.debug("ShopAskForm: {0}".format(form))
+            form = ShopAskForm(request.user, request.POST, initial={'title': cur_cat.title, 'categories': curent_cat})
+            # form.cleaned_data['title'] = cur_cat.title
+            # form.categories = curent_cat
+            # logger.debug("ShopAskForm: {0}".format(form))
+            # form.save()
         else:
             form = QuestionForm(request.user, request.POST)
         #form = Form(request.user, request.POST)
+        if form.errors:
+            logger.debug("ShopAskForm ERRKR: {0}".format(form.errors))
+
         if form and form.is_valid():
-            logging.debug(form.cleaned_data)
+            form.cleaned_data['title'] = cur_cat.title
+            form.cleaned_data['categories'] = curent_cat
+            logger.debug("!!!!!!!! cleaned_data: {0}".format(form.cleaned_data))
             if request.user.is_authenticated():
-                logger.debug("FORM SEND is_authenticated")
-                question = form.save()
-                return redirect(question.get_absolute_url())
+                logger.debug("FORM SEND authenticated user")
+                # TODO: отправляем полностью письмо
+                send_mail_full(form.cleaned_data, tpl_subject=cur_cat.tpl_subject, tpl_message=cur_cat.tpl_message,
+                               tpl_message_html=cur_cat.tpl_message_html)
+                # question = form.save()
+                form = None
+                # return redirect(question.get_absolute_url())
             else:
-                logger.debug("FORM NO SEND is_anonymous")
-                question = form.save()
-                return redirect(settings.KN_REDIRECT_PATH)
-        else:
-            logger.debug("FORM ERROR: {0}".format(form))
+                logger.debug("FORM SEND is anonymous")
+                send_mail_full(form.cleaned_data)
+                # question = form.save()
+                form = None
+                # return redirect(settings.KN_REDIRECT_PATH)
+        # else:
+        #     logger.debug("FORM ERROR: {0}".format(form))
     else:
         if forms == 'QuestionAskForm':
             form = QuestionAskForm(request.user)
         elif forms == 'ShopAskForm':
-            form = ShopAskForm(request.user)
+            form = ShopAskForm(request.user, initial={'title': cur_cat.title, 'categories': curent_cat})
         else:
             form = QuestionForm(request.user)
         #form = Form(request.user)

@@ -75,7 +75,7 @@ def knowledge_post_save(sender, instance, created, **kwargs):
             except:
                 cat_id = 1
             logger.debug('>>> categories.id={0}'.format(cat_id))
-            staffers =Category.objects.select_related().get(pk=cat_id)
+            staffers = Category.objects.select_related().get(pk=cat_id)
             #staffers =Category.objects.select_related().get(Question.categories)
             out_dict = dict([[user['email'], user['username']] for user in staffers.user.values()])
 
