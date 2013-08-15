@@ -201,7 +201,7 @@ def knowledge_ask(request, page='asc',
                   template='django_knowledge/ask.html',
                   Form=QuestionForm, forms=None):
     logger.debug("knowledge_ask")
-    fiber_page = Page.objects.get(url__exact='"news_item_list"')
+    fiber_page = Page.objects.get(url__exact=page)
     if settings.LOGIN_REQUIRED and not request.user.is_authenticated():
         return HttpResponseRedirect(settings.LOGIN_URL + "?next=%s" % request.path)
         # TODO: добавить при отправке сплывающая подсказка вам отправлено сообщение....
