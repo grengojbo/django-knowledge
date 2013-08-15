@@ -10,6 +10,8 @@ from django.views import generic
 from knowledge.models import Question, Response, Category
 from knowledge.forms import QuestionForm, ResponseForm, QuestionAskForm
 from knowledge.utils import paginate
+from fiber.views import FiberPageMixin
+from fiber.models import Page
 import logging
 # Get an instance of a logger
 logger = logging.getLogger(__name__)
@@ -199,6 +201,7 @@ def knowledge_ask(request, page='asc',
                   template='django_knowledge/ask.html',
                   Form=QuestionForm, forms=None):
     logger.debug("knowledge_ask")
+    fiber_page = Page.objects.get(url__exact='"news_item_list"')
     if settings.LOGIN_REQUIRED and not request.user.is_authenticated():
         return HttpResponseRedirect(settings.LOGIN_URL + "?next=%s" % request.path)
         # TODO: добавить при отправке сплывающая подсказка вам отправлено сообщение....
@@ -228,6 +231,7 @@ def knowledge_ask(request, page='asc',
     return render(request, template, {
         'request': request,
         'page': page,
+        'fiber_page': fiber_page,
         'my_questions': get_my_questions(request),
         'form': form,
         'categories': Category.objects.all()

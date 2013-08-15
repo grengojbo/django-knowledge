@@ -162,6 +162,92 @@ def QuestionAskForm(user, *args, **kwargs):
     return _QuestionAskForm(*args, **kwargs)
 
 
+def ShopAskForm(user, *args, **kwargs):
+    """
+    Build and return the appropriate form depending
+    on the status of the passed in user.
+    """
+    logger.debug(">>>>> ShopAskForm ")
+    #logger.debug("lot_form: {0}".format(f))
+    if user.is_anonymous():
+        if not settings.ALLOW_ANONYMOUS:
+            return None
+        else:
+            selected_fields = ['name', 'email', 'title', 'body', 'categories', 'phone_number', 'company', 'trading', 'area_​​lease', 'lease', 'range_of_goods', 'trademarks']
+    else:
+        selected_fields = ['user', 'title', 'body', 'status', 'categories', 'phone_number', 'company', 'trading', 'area_​​lease', 'lease', 'range_of_goods', 'trademarks']
+
+    if settings.ALERTS:
+        selected_fields += ['alert']
+
+    class _ShopAskForm(forms.ModelForm):
+        def __init__(self, *args, **kwargs):
+            super(_ShopAskForm, self).__init__(*args, **kwargs)
+
+            for key in self.fields:
+                if not key in OPTIONAL_FIELDS:
+                    self.fields[key].required = True
+
+            # hide the internal status for non-staff
+            qf = self.fields.get('status', None)
+            if qf and not user.is_staff:
+                choices = list(qf.choices)
+                choices.remove(('internal', _('Internal')))
+                qf.choices = choices
+
+            # a bit of a hack...
+            # hide a field, and use clean to force
+            # a specific value of ours
+            for key in ['user']:
+                qf = self.fields.get(key, None)
+                if qf:
+                    qf.widget = qf.hidden_widget()
+                    qf.required = False
+
+        # honey pot!
+        #phone_number = forms.CharField(label=_('Phone number'), required=False)
+        if user.is_anonymous():
+            captcha = ReCaptchaField(attrs={'theme': 'clean', 'lang': 'ru'})
+        #categories = forms.MultipleChoiceField(choices=CAT_CHOICES, required=True)
+        #categories = forms.ChoiceField(choices=Category.objects.values_list('id','title'), required=True)
+        #categories = forms.MultipleHiddenInput(choices=Category.objects.all())
+        #categories = forms.HiddenInput(initial=2)
+
+        # attachment = forms.FileField(required=False,
+        # label=_('Attach File'),
+        # help_text=_('You can attach a file such as a document or screenshot to this ticket.'),
+        # )
+        #
+        def clean_user(self):
+            return user
+        # def save(self, user):
+        # files = []
+        #         if self.cleaned_data['attachment']:
+        #             import mimetypes
+        #             file = self.cleaned_data['attachment']
+        #             filename = file.name.replace(' ', '_')
+        #             a = Attachment(
+        #                 followup=f,
+        #                 filename=filename,
+        #                 mime_type=mimetypes.guess_type(filename)[0] or 'application/octet-stream',
+        #                 size=file.size,
+        #                 )
+        #             a.file.save(file.name, file, save=False)
+        #             a.save()
+        #
+        #             if file.size < getattr(settings, 'MAX_EMAIL_ATTACHMENT_SIZE', 512000):
+        #                 # Only files smaller than 512kb (or as defined in
+        #                 # settings.MAX_EMAIL_ATTACHMENT_SIZE) are sent via email.
+        #                 files.append(a.file.path)
+        #
+
+        class Meta:
+            model = Question
+            fields = selected_fields
+
+    return _ShopAskForm(*args, **kwargs)
+
+
 def ResponseForm(user, question, *args, **kwargs):
     """
     Build and return the appropriate form depending
