@@ -136,13 +136,31 @@ class Question(KnowledgeBase):
     is_question = True
     _requesting_user = None
 
-    title = models.CharField(max_length=255, verbose_name=_('Question'), help_text=_('Enter your question or suggestion.'))
-    body = models.TextField(blank=True, null=True, verbose_name=_('Description'), help_text=_('Please offer details. Markdown enabled.'))
+    title = models.CharField(max_length=255, verbose_name=_('Question'),
+                             help_text=_('Enter your question or suggestion.'))
+    body = models.TextField(blank=True, null=True, verbose_name=_('Description'),
+                            help_text=_('Please offer details. Markdown enabled.'))
     status = models.CharField(verbose_name=_('Status'), max_length=32, choices=STATUSES, default='private', db_index=True)
     locked = models.BooleanField(default=False)
     #categories = models.ManyToManyField('knowledge.Category', blank=True, null=True)
     categories = models.ForeignKey('knowledge.Category', verbose_name=_(u'Category'), blank=True, null=True)
     phone_number = models.CharField(_('Phone number'), blank=True, null=True, max_length=15)
+    company = models.CharField(max_length=255, verbose_name=_(u'Kомпанія'), help_text=_(u'Назва вашої компанії.'),
+                               blank=True, null=True)
+    activities = models.CharField(max_length=255, verbose_name=_(u'Види діяльності'),
+                                  help_text=_(u'Види діяльності на орендованій площі.'), blank=True, null=True)
+    trading = models.CharField(max_length=255, verbose_name=_(u'Товарна група'), help_text=_(u'Ваша товарна група.'),
+                               blank=True, null=True)
+    areea_leasse = models.CharField(max_length=255, verbose_name=_(u'Площа оренди'),
+                                    help_text=_(u'Запланована площа оренди (м2)'), blank=True, null=True)
+    date_leasse = models.CharField(max_length=255, verbose_name=_(u'Термін оренди'),
+                                    help_text=_(u'На який термін плануєте оренду'), blank=True, null=True)
+    trademarks = models.TextField(blank=True, null=True, verbose_name=_(u'Торгові марки'),
+                                  help_text=_(u'Торгові марки, країни-виробники'))
+    range_of_goods = models.TextField(blank=True, null=True, verbose_name=_(u'Асортимент'),
+                                      help_text=_(u'Асортимент товарів, послуг, розваг'))
+    # body = models.TextField(blank=True, null=True, verbose_name=_(u''), help_text=_(u''))
+
 
     objects = QuestionManager()
 

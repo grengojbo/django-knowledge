@@ -8,7 +8,7 @@ from django.db.models import Q
 from django.views import generic
 
 from knowledge.models import Question, Response, Category
-from knowledge.forms import QuestionForm, ResponseForm, QuestionAskForm
+from knowledge.forms import QuestionForm, ResponseForm, QuestionAskForm, ShopAskForm
 from knowledge.utils import paginate
 from fiber.views import FiberPageMixin
 from fiber.models import Page
@@ -199,15 +199,24 @@ def knowledge_moderate(
 
 def knowledge_ask(request, page='asc',
                   template='django_knowledge/ask.html',
-                  Form=QuestionForm, forms=None):
-    logger.debug("knowledge_ask")
+                  Form=QuestionForm, forms=None, curent_cat=1):
+    logger.debug("knowledge_ask page: {0}".format(page))
     fiber_page = Page.objects.get(url__exact=page)
+    fiber_current_pages = []
+    fiber_current_pages.append(fiber_page)
+    cat = Category.objects.all()
+    cur_cat = Category.objects.get(pk=curent_cat)
     if settings.LOGIN_REQUIRED and not request.user.is_authenticated():
         return HttpResponseRedirect(settings.LOGIN_URL + "?next=%s" % request.path)
         # TODO: добавить при отправке сплывающая подсказка вам отправлено сообщение....
     if request.method == 'POST':
         if forms == 'QuestionAskForm':
             form = QuestionAskForm(request.user, request.POST)
+        elif forms == 'ShopAskForm':
+            form = ShopAskForm(request.user, request.POST)
+            form.title = cur_cat.title
+            form.categories = curent_cat
+            logger.debug("ShopAskForm: {0}".format(form))
         else:
             form = QuestionForm(request.user, request.POST)
         #form = Form(request.user, request.POST)
@@ -221,9 +230,13 @@ def knowledge_ask(request, page='asc',
                 logger.debug("FORM NO SEND is_anonymous")
                 question = form.save()
                 return redirect(settings.KN_REDIRECT_PATH)
+        else:
+            logger.debug("FORM ERROR: {0}".format(form))
     else:
         if forms == 'QuestionAskForm':
             form = QuestionAskForm(request.user)
+        elif forms == 'ShopAskForm':
+            form = ShopAskForm(request.user)
         else:
             form = QuestionForm(request.user)
         #form = Form(request.user)
@@ -232,7 +245,9 @@ def knowledge_ask(request, page='asc',
         'request': request,
         'page': page,
         'fiber_page': fiber_page,
+        'fiber_current_pages': fiber_current_pages,
         'my_questions': get_my_questions(request),
         'form': form,
-        'categories': Category.objects.all()
+        'categories': cat,
+        'cur_cat': cur_cat
     })
