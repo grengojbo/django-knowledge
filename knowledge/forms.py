@@ -254,6 +254,67 @@ def ShopAskForm(user=None, *args, **kwargs):
     return _ShopAskForm(*args, **kwargs)
 
 
+def OfficesAskForm(user=None, *args, **kwargs):
+    """
+    Build and return the appropriate form depending
+    on the status of the passed in user.
+    """
+    logger.debug(">>>>> OfficesAskForm ")
+    #logger.debug("lot_form: {0}".format(f))
+    if user.is_anonymous():
+        if not settings.ALLOW_ANONYMOUS:
+            return None
+        else:
+            selected_fields = ['name', 'email', 'activities', 'body', 'phone_number', 'company', 'trading', 'areea_leasse', 'floor', 'parking']
+    else:
+        selected_fields = ['user', 'activities',  'body', 'phone_number', 'company', 'trading', 'areea_leasse', 'floor', 'parking']
+
+    if settings.ALERTS:
+        selected_fields += ['alert']
+
+    class _OfficesAskForm(forms.ModelForm):
+        def __init__(self, *args, **kwargs):
+            super(_OfficesAskForm, self).__init__(*args, **kwargs)
+
+            for key in self.fields:
+                if not key in OPTIONAL_FIELDS:
+                    self.fields[key].required = True
+
+            # hide the internal status for non-staff
+            qf = self.fields.get('status', None)
+            if qf and not user.is_staff:
+                choices = list(qf.choices)
+                choices.remove(('internal', _('Internal')))
+                qf.choices = choices
+
+            # a bit of a hack...
+            # hide a field, and use clean to force
+            # a specific value of ours
+            for key in ['user']:
+                qf = self.fields.get(key, None)
+                if qf:
+                    qf.widget = qf.hidden_widget()
+                    qf.required = False
+
+            # self.fields['title'] = self.fields.get('title', title)
+            # self.fields['categories'] = self.fields.get('categories', curent_cat)
+            logger.debug("FIELD title: {0}".format(self.fields.get('title', None)))
+            logger.debug("FIELD categories: {0}".format(self.fields.get('categories', None)))
+            # logger.debug("FIELD initial: {0}".format(initial))
+
+
+        if user.is_anonymous():
+            captcha = ReCaptchaField(attrs={'theme': 'clean', 'lang': 'ru'})
+
+        def clean_user(self):
+            return user
+
+        class Meta:
+            model = Question
+            fields = selected_fields
+
+    return _OfficesAskForm(*args, **kwargs)
+
 def ResponseForm(user, question, *args, **kwargs):
     """
     Build and return the appropriate form depending

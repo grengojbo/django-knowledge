@@ -8,7 +8,7 @@ from django.db.models import Q
 from django.views import generic
 
 from knowledge.models import Question, Response, Category
-from knowledge.forms import QuestionForm, ResponseForm, QuestionAskForm, ShopAskForm
+from knowledge.forms import QuestionForm, ResponseForm, QuestionAskForm, ShopAskForm, OfficesAskForm
 from knowledge.utils import send_mail_full
 from fiber.views import FiberPageMixin
 from fiber.models import Page
@@ -214,6 +214,8 @@ def knowledge_ask(request, page='asc',
             form = QuestionAskForm(request.user, request.POST)
         elif forms == 'ShopAskForm':
             form = ShopAskForm(request.user, request.POST, initial={'title': cur_cat.title, 'categories': curent_cat})
+        elif forms == 'OfficesAskForm':
+            form = OfficesAskForm(request.user, request.POST, initial={'title': cur_cat.title, 'categories': curent_cat})
             # form.cleaned_data['title'] = cur_cat.title
             # form.categories = curent_cat
             # logger.debug("ShopAskForm: {0}".format(form))
@@ -248,7 +250,9 @@ def knowledge_ask(request, page='asc',
         if forms == 'QuestionAskForm':
             form = QuestionAskForm(request.user)
         elif forms == 'ShopAskForm':
-            form = ShopAskForm(request.user, initial={'title': cur_cat.title, 'categories': curent_cat})
+            form = OfficesAskForm(request.user, initial={'title': cur_cat.title, 'categories': curent_cat})
+        elif forms == 'ShopAskForm':
+            form = OfficesAskForm(request.user, initial={'title': cur_cat.title, 'categories': curent_cat})
         else:
             form = QuestionForm(request.user)
         #form = Form(request.user)
