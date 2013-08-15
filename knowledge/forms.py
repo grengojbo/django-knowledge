@@ -212,8 +212,8 @@ def ShopAskForm(user=None, *args, **kwargs):
 
         # honey pot!
         #phone_number = forms.CharField(label=_('Phone number'), required=False)
-        # if user.is_anonymous():
-        #     captcha = ReCaptchaField(attrs={'theme': 'clean', 'lang': 'ru'})
+        if user.is_anonymous():
+            captcha = ReCaptchaField(attrs={'theme': 'clean', 'lang': 'ru'})
         #categories = forms.MultipleChoiceField(choices=CAT_CHOICES, required=True)
         #categories = forms.ChoiceField(choices=Category.objects.values_list('id','title'), required=True)
         #categories = forms.MultipleHiddenInput(choices=Category.objects.all())
