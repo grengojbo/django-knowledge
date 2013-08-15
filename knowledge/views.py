@@ -250,7 +250,7 @@ def knowledge_ask(request, page='asc',
         if forms == 'QuestionAskForm':
             form = QuestionAskForm(request.user)
         elif forms == 'ShopAskForm':
-            form = OfficesAskForm(request.user, initial={'title': cur_cat.title, 'categories': curent_cat})
+            form = ShopAskForm(request.user, initial={'title': cur_cat.title, 'categories': curent_cat})
         elif forms == 'ShopAskForm':
             form = OfficesAskForm(request.user, initial={'title': cur_cat.title, 'categories': curent_cat})
         else:
