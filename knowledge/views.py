@@ -240,7 +240,8 @@ def knowledge_ask(request, page='asc',
                 # return redirect(question.get_absolute_url())
             else:
                 logger.debug("FORM SEND is anonymous")
-                send_mail_full(form.cleaned_data)
+                send_mail_full(form.cleaned_data, tpl_subject=cur_cat.tpl_subject, tpl_message=cur_cat.tpl_message,
+                               tpl_message_html=cur_cat.tpl_message_html)
                 # question = form.save()
                 form = None
                 # return redirect(settings.KN_REDIRECT_PATH)
