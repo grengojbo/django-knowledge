@@ -11,7 +11,7 @@ import logging
 logger = logging.getLogger(__name__)
 
 OPTIONAL_FIELDS = ['alert', 'categories', 'phone_number']
-
+OPTIONAL_FIELDS_OFFICE = ['alert', 'categories', 'phone_number', 'parking', 'chbox1', 'chbox2']
 
 __todo__ = """
 This is serious badness. Really? Functions masquerading as
@@ -265,19 +265,21 @@ def OfficesAskForm(user=None, *args, **kwargs):
         if not settings.ALLOW_ANONYMOUS:
             return None
         else:
-            selected_fields = ['name', 'email', 'activities', 'body', 'phone_number', 'company', 'trading', 'areea_leasse', 'floor', 'parking']
+            selected_fields = ['name', 'email', 'activities', 'body', 'phone_number', 'company', 'trading', 'areea_leasse', 'floor', 'parking', 'chbox1', 'chbox2']
     else:
-        selected_fields = ['user', 'activities',  'body', 'phone_number', 'company', 'trading', 'areea_leasse', 'floor', 'parking']
+        selected_fields = ['user', 'activities',  'body', 'phone_number', 'company', 'trading', 'areea_leasse', 'floor', 'parking', 'chbox1', 'chbox2']
 
     if settings.ALERTS:
         selected_fields += ['alert']
+
+
 
     class _OfficesAskForm(forms.ModelForm):
         def __init__(self, *args, **kwargs):
             super(_OfficesAskForm, self).__init__(*args, **kwargs)
 
             for key in self.fields:
-                if not key in OPTIONAL_FIELDS:
+                if not key in OPTIONAL_FIELDS_OFFICE:
                     self.fields[key].required = True
 
             # hide the internal status for non-staff

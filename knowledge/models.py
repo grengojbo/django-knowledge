@@ -169,6 +169,9 @@ class Question(KnowledgeBase):
     range_of_goods = models.TextField(blank=True, null=True, verbose_name=_(u'Асортимент'),
                                       help_text=_(u'Асортимент товарів, послуг, розваг'))
     # body = models.TextField(blank=True, null=True, verbose_name=_(u''), help_text=_(u''))
+    chbox1 = models.BooleanField(default=True, verbose_name=_('Checkbox 1'))
+    chbox2 = models.BooleanField(default=True, verbose_name=_('Checkbox'))
+
 
 
     objects = QuestionManager()
