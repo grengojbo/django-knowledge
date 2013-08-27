@@ -89,7 +89,7 @@ def QuestionAskForm(user, *args, **kwargs):
         else:
             selected_fields = ['name', 'email', 'title', 'body', 'categories', 'phone_number']
     else:
-        selected_fields = ['user', 'title', 'body', 'status', 'categories', 'phone_number']
+        selected_fields = ['user', 'title', 'body', 'categories', 'phone_number']
 
     if settings.ALERTS:
         selected_fields += ['alert']

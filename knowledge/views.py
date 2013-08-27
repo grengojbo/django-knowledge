@@ -211,7 +211,7 @@ def knowledge_ask(request, page='asc',
         # TODO: добавить при отправке сплывающая подсказка вам отправлено сообщение....
     if request.method == 'POST':
         if forms == 'QuestionAskForm':
-            form = QuestionAskForm(request.user, request.POST)
+            form = QuestionAskForm(request.user, request.POST, initial={'title': cur_cat.title, 'categories': curent_cat})
         elif forms == 'ShopAskForm':
             form = ShopAskForm(request.user, request.POST, initial={'title': cur_cat.title, 'categories': curent_cat})
         elif forms == 'OfficesAskForm':
@@ -249,7 +249,7 @@ def knowledge_ask(request, page='asc',
         #     logger.debug("FORM ERROR: {0}".format(form))
     else:
         if forms == 'QuestionAskForm':
-            form = QuestionAskForm(request.user)
+            form = QuestionAskForm(request.user, initial={'title': cur_cat.title, 'categories': curent_cat})
         elif forms == 'ShopAskForm':
             form = ShopAskForm(request.user, initial={'title': cur_cat.title, 'categories': curent_cat})
         elif forms == 'OfficesAskForm':
