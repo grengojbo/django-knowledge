@@ -95,7 +95,7 @@ def send_alerts(target_dict, response=None, question=None, tpl_subject='subject.
 
         msg = EmailMultiAlternatives(subject, message, to=[email])
         msg.attach_alternative(message_html, 'text/html')
-        #msg.send()
+        msg.send()
 
 
 def send_mail_full(mess, tpl_subject='subject.txt', tpl_message='message.txt', tpl_message_html='message.html'):
