@@ -91,11 +91,11 @@ def send_alerts(target_dict, response=None, question=None, tpl_subject='subject.
         message = render_to_string('django_knowledge/emails/{0}'.format(tpl_message), context)
         logger.debug(u"message: {0}".format(message))
         message_html = render_to_string('django_knowledge/emails/{0}'.format(tpl_message_html), context)
-        logger.debug(u"message_html: {0}".format(message_html))
+        #logger.debug(u"message_html: {0}".format(message_html))
 
         msg = EmailMultiAlternatives(subject, message, to=[email])
         msg.attach_alternative(message_html, 'text/html')
-        msg.send()
+        #msg.send()
 
 
 def send_mail_full(mess, tpl_subject='subject.txt', tpl_message='message.txt', tpl_message_html='message.html'):
