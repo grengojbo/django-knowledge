@@ -224,7 +224,7 @@ def knowledge_ask(request, page='asc',
             form = QuestionForm(request.user, request.POST)
         #form = Form(request.user, request.POST)
         if form.errors:
-            logger.debug("ShopAskForm ERRKR: {0}".format(form.errors))
+            logger.debug("{1} ERRKR: {0}".format(form.errors, forms))
 
         if form and form.is_valid():
             form.cleaned_data['title'] = cur_cat.title
