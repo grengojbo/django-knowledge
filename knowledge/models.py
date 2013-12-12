@@ -147,7 +147,8 @@ class Question(KnowledgeBase):
                              help_text=_('Enter your question or suggestion.'))
     body = models.TextField(blank=True, null=True, verbose_name=_('Description'),
                             help_text=_('Please offer details. Markdown enabled.'))
-    status = models.CharField(verbose_name=_('Status'), max_length=32, choices=STATUSES, default='private', db_index=True)
+    status = models.CharField(verbose_name=_('Status'), max_length=32, choices=STATUSES, default='private',
+                              db_index=True)
     locked = models.BooleanField(default=False)
     #categories = models.ManyToManyField('knowledge.Category', blank=True, null=True)
     categories = models.ForeignKey('knowledge.Category', verbose_name=_(u'Category'), blank=True, null=True)
@@ -163,7 +164,7 @@ class Question(KnowledgeBase):
     areea_leasse = models.CharField(max_length=255, verbose_name=_(u'Площа оренди'),
                                     help_text=_(u'Запланована площа оренди (м2)'), blank=True, null=True)
     date_leasse = models.CharField(max_length=255, verbose_name=_(u'Термін оренди'),
-                                    help_text=_(u'На який термін плануєте оренду'), blank=True, null=True)
+                                   help_text=_(u'На який термін плануєте оренду'), blank=True, null=True)
     trademarks = models.TextField(blank=True, null=True, verbose_name=_(u'Торгові марки'),
                                   help_text=_(u'Торгові марки, країни-виробники'))
     range_of_goods = models.TextField(blank=True, null=True, verbose_name=_(u'Асортимент'),
@@ -171,8 +172,6 @@ class Question(KnowledgeBase):
     # body = models.TextField(blank=True, null=True, verbose_name=_(u''), help_text=_(u''))
     chbox1 = models.BooleanField(default=True, verbose_name=_('Checkbox 1'))
     chbox2 = models.BooleanField(default=True, verbose_name=_('Checkbox'))
-
-
 
     objects = QuestionManager()
 
@@ -182,7 +181,7 @@ class Question(KnowledgeBase):
         verbose_name_plural = _('Questions')
 
     def __unicode__(self):
-        return self.title
+        return u'{0}'.format(self.title)
 
     def get_cat(self):
         return self.categories
@@ -192,9 +191,9 @@ class Question(KnowledgeBase):
         from django.template.defaultfilters import slugify
 
         if settings.SLUG_URLS:
-            return ('knowledge_thread', [self.id, slugify(self.title)])
+            return 'knowledge_thread', [self.id, slugify(self.title)]
         else:
-            return ('knowledge_thread_no_slug', [self.id])
+            return 'knowledge_thread_no_slug', [self.id]
 
     def inherit(self):
         pass
@@ -266,8 +265,10 @@ class Response(KnowledgeBase):
     is_response = True
 
     question = models.ForeignKey('knowledge.Question', related_name='responses')
-    body = models.TextField(blank=True, null=True, verbose_name=_('Response'), help_text=_('Please enter your response. Markdown enabled.'))
-    status = models.CharField(verbose_name=_('Status'), max_length=32, choices=STATUSES_EXTENDED, default='inherit', db_index=True)
+    body = models.TextField(blank=True, null=True, verbose_name=_('Response'),
+                            help_text=_('Please enter your response. Markdown enabled.'))
+    status = models.CharField(verbose_name=_('Status'), max_length=32, choices=STATUSES_EXTENDED, default='inherit',
+                              db_index=True)
     accepted = models.BooleanField(default=False)
 
     objects = ResponseManager()

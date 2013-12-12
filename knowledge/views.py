@@ -6,15 +6,35 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.core.urlresolvers import reverse, NoReverseMatch
 from django.db.models import Q
 from django.views import generic
+from django.utils.translation import ugettext_lazy as _
 
 from knowledge.models import Question, Response, Category
 from knowledge.forms import QuestionForm, ResponseForm, QuestionAskForm, ShopAskForm, OfficesAskForm
 from knowledge.utils import send_mail_full
-from fiber.views import FiberPageMixin
+#from fiber.views import FiberPageMixin
 from fiber.models import Page
+from rest_framework.views import APIView
+from rest_framework.response import Response as ResponseApi
+from django.http import HttpResponse
+from rest_framework import status
+from django.views.decorators.csrf import csrf_exempt
+from rest_framework.renderers import JSONRenderer
+from rest_framework.parsers import JSONParser
+from .serializers import QuestionSerializer
 import logging
 # Get an instance of a logger
 logger = logging.getLogger(__name__)
+
+
+class JSONResponse(HttpResponse):
+    """
+    An HttpResponse that renders its content into JSON.
+    """
+    def __init__(self, data, **kwargs):
+        content = JSONRenderer().render(data)
+        kwargs['content_type'] = 'application/json'
+        super(JSONResponse, self).__init__(content, **kwargs)
+
 
 ALLOWED_MODS = {
     'question': [
@@ -93,21 +113,15 @@ class KnowledgeList(generic.ListView, KnowledgeBase):
         return context
 
 
-def knowledge_thread(request,
-                     question_id,
-                     slug=None,
-                     template='django_knowledge/thread.html',
-                     Form=ResponseForm):
+def knowledge_thread(request, question_id, slug=None, template='django_knowledge/thread.html', Form=ResponseForm):
     logger.debug("viev django_knowledge/thread.html")
     if settings.LOGIN_REQUIRED and not request.user.is_authenticated():
         return HttpResponseRedirect(settings.LOGIN_URL + "?next=%s" % request.path)
 
     try:
-        question = Question.objects.can_view(request.user) \
-            .get(id=question_id)
+        question = Question.objects.can_view(request.user).get(id=question_id)
     except Question.DoesNotExist:
-        if Question.objects.filter(id=question_id).exists() and \
-                hasattr(settings, 'LOGIN_REDIRECT_URL'):
+        if Question.objects.filter(id=question_id).exists() and hasattr(settings, 'LOGIN_REDIRECT_URL'):
             return redirect(settings.LOGIN_REDIRECT_URL)
         else:
             raise Http404
@@ -137,12 +151,7 @@ def knowledge_thread(request,
     })
 
 
-def knowledge_moderate(
-        request,
-        lookup_id,
-        model,
-        mod,
-        allowed_mods=ALLOWED_MODS):
+def knowledge_moderate(request, lookup_id, model, mod, allowed_mods=ALLOWED_MODS):
     """
     An easy to extend method to moderate questions
     and responses in a vaguely RESTful way.
@@ -197,13 +206,13 @@ def knowledge_moderate(
         return redirect(reverse('knowledge_index'))
 
 
-def knowledge_ask(request, page='asc',
-                  template='django_knowledge/ask.html',
+def knowledge_ask(request, page='asc', template='django_knowledge/ask.html',
                   Form=QuestionForm, forms=None, curent_cat=1):
     logger.debug("knowledge_ask page: {0}".format(page))
     fiber_page = Page.objects.get(url__exact=page)
-    fiber_current_pages = []
-    fiber_current_pages.append(fiber_page)
+    fiber_current_pages = [fiber_page]
+    # fiber_current_pages = []
+    # fiber_current_pages.append(fiber_page)
     cat = Category.objects.all()
     cur_cat = Category.objects.get(pk=curent_cat)
     if settings.LOGIN_REQUIRED and not request.user.is_authenticated():
@@ -211,11 +220,13 @@ def knowledge_ask(request, page='asc',
         # TODO: добавить при отправке сплывающая подсказка вам отправлено сообщение....
     if request.method == 'POST':
         if forms == 'QuestionAskForm':
-            form = QuestionAskForm(request.user, request.POST, initial={'title': cur_cat.title, 'categories': curent_cat})
+            form = QuestionAskForm(request.user, request.POST,
+                                   initial={'title': cur_cat.title, 'categories': curent_cat})
         elif forms == 'ShopAskForm':
             form = ShopAskForm(request.user, request.POST, initial={'title': cur_cat.title, 'categories': curent_cat})
         elif forms == 'OfficesAskForm':
-            form = OfficesAskForm(request.user, request.POST, initial={'title': cur_cat.title, 'categories': curent_cat})
+            form = OfficesAskForm(request.user, request.POST,
+                                  initial={'title': cur_cat.title, 'categories': curent_cat})
             # form.cleaned_data['title'] = cur_cat.title
             # form.categories = curent_cat
             # logger.debug("ShopAskForm: {0}".format(form))
@@ -268,3 +279,49 @@ def knowledge_ask(request, page='asc',
         'categories': cat,
         'cur_cat': cur_cat
     })
+
+
+class QuestionView(APIView):
+    """
+    Сохранение и отправка по e-mail контактной информации
+    """
+    def post(self, request, format=None):
+        logger.debug('QuestionView POST: {0}'.format(request.DATA))
+        serializer = QuestionSerializer(data=request.DATA)
+        if serializer.is_valid():
+            serializer.save()
+            return ResponseApi(serializer.data, status=status.HTTP_201_CREATED)
+        return ResponseApi(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+def api_contact(request, curent_cat=1):
+    if request.method == 'POST':
+        data = JSONParser().parse(request)
+        logger.debug('api_contact POST: {0}'.format(data))
+        if 'categories' not in data:
+            data['categories'] = curent_cat
+        else:
+            curent_cat = int(data['categories'])
+        try:
+            cur_cat = Category.objects.get(pk=curent_cat)
+        except Category.DoesNotExist:
+            return JSONResponse({'errors': _(u'Category does not exist')}, status=400)
+        if 'title' not in data:
+            data['title'] = cur_cat.title
+        serializer = QuestionSerializer(data=data)
+        if serializer.is_valid():
+            serializer.save()
+            if request.user.is_authenticated():
+                logger.debug("FORM SEND authenticated user")
+                # TODO: отправляем полностью письмо
+                send_mail_full(serializer.data, tpl_subject=cur_cat.tpl_subject, tpl_message=cur_cat.tpl_message,
+                               tpl_message_html=cur_cat.tpl_message_html)
+            else:
+                logger.debug("FORM SEND is anonymous")
+                send_mail_full(serializer.data, tpl_subject=cur_cat.tpl_subject, tpl_message=cur_cat.tpl_message,
+                               tpl_message_html=cur_cat.tpl_message_html)
+            return JSONResponse(serializer.data, status=201)
+        else:
+            return JSONResponse(serializer.errors, status=400)
+
+    return JSONResponse({}, status=status.HTTP_400_BAD_REQUEST)

@@ -1,30 +1,28 @@
 {% load i18n %}
-{% load markup %}
-
-{% blocktrans with name=name %}Hello {{ name }},{% endblocktrans %}
-
-{% if response %}
-    {% blocktrans with url=response.question.url title=response.question.title domain=site.domain %}
-    We just wanted to let you know that a new response has been added to the question "{{ title }}". You can visit it here: {{ domain }}{{ url "}}"
-    {% endblocktrans %}
-
-    {{ response.body }}
-
-    {% trans "You are receiving these messages because you checked the 'alert' box when you originally posted." %}
-{% endif %}
-
 {% if question %}
-    {% blocktrans with url=question.url title=question.title domain=site.domain %}
-    We just wanted to let you know that a new question has been added: "{{ title }}". You can visit it here: {{ domain }}{{ url "}}"
-    {% endblocktrans %}
-  
-    {% trans 'Email' %}: {{ question.email }}
-    {% trans 'Phone number' %}: {{ question.phone_number }}
+{% blocktrans with title=question.title domain=site.domain %}
+We just wanted to let you know that a new question has been added: "{{ title }}". You can visit it here: http://{{ domain }}
+{% endblocktrans %}
 
-    {{ question.body }}
-
-    {% trans "You are receiving these messages because you are a staff member." %}
+{% trans 'Name' %}: {{ question.name }}
+{% trans 'Email' %}: {{ question.email }}
+{% trans 'Phone number' %}: {{ question.phone_number }}
+----------------------------------------------------
+{{ question.body }}
+----------------------------------------------------
+{% trans "You are receiving these messages because you are a staff member." %}
 {% endif %}
+{% if response %}
+{% blocktrans with name=response.name %}Hello {{ name }},{% endblocktrans %}
+{% blocktrans with url=response.question.url title=response.question.title domain=site.domain %}
+We just wanted to let you know that a new response has been added to the question "{{ title }}". You can visit it here: {{ domain }}
+{% endblocktrans %}
+
+{{ response.body }}
+
+{% trans "You are receiving these messages because you checked the 'alert' box when you originally posted." %}
 
 {% blocktrans with name=site.name %}Thank you,
 {{ name }} team{% endblocktrans %}
+{% endif %}
+

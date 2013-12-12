@@ -14,3 +14,5 @@ KN_REDIRECT_PATH = getattr(settings, 'KNOWLEDGE_REDIREC_PATH', 'knowledge_index'
 
 # misc
 SLUG_URLS = getattr(settings, 'KNOWLEDGE_SLUG_URLS', True)
+
+NO_SEND_MAIL = getattr(settings, 'KNOWLEDGE_NO_SEND_MAIL', None)
