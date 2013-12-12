@@ -57,6 +57,7 @@ def get_module(path):
 
 
 user_model_label = getattr(settings, 'AUTH_USER_MODEL', 'auth.User')
+send_mail_real = getattr(settings, 'NO_SEND_MAIL', None)
 
 
 def send_alerts(target_dict, response=None, question=None, tpl_subject='subject.txt', tpl_message='message.txt', tpl_message_html='message.html', **kwargs):
@@ -69,7 +70,6 @@ def send_alerts(target_dict, response=None, question=None, tpl_subject='subject.
     from django.core.mail import EmailMultiAlternatives
 
     site = Site.objects.get_current()
-    send_mail_real = getattr(settings, 'NO_SEND_MAIL', None)
     for email, name in target_dict.items():
         # if isinstance(name, User):
         #     name = u'{0} {1}'.format(name.first_name, name.last_name)

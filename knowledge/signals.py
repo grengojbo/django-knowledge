@@ -42,7 +42,7 @@ def send_alerts(target_dict, response=None, question=None, **kwargs):
         subject = u' '.join(line.strip() for line in subject.splitlines()).strip()
         msg = EmailMultiAlternatives(subject, message, to=[email])
         msg.attach_alternative(message_html, 'text/html')
-        msg.send()
+        #msg.send()
 
 
 def knowledge_post_save(sender, instance, created, **kwargs):
