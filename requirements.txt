@@ -1,5 +1,5 @@
-Django
-Markdown==2.1.1
+#Django
+#Markdown==2.1.1
 South
 Sphinx
 coverage
