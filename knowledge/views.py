@@ -351,7 +351,7 @@ def api_zakaz(request, curent_cat=2):
                                tpl_message_html=cur_cat.tpl_message_html)
             else:
                 logger.debug("FORM SEND is anonymous tpl: {0}".format(cur_cat.tpl_subject))
-                logger.debug('serializer.data: {0}'.format(data))
+                # logger.debug('serializer.data: {0}'.format(data))
                 send_mail_full(data, tpl_subject=cur_cat.tpl_subject, tpl_message=cur_cat.tpl_message,
                                tpl_message_html=cur_cat.tpl_message_html)
             return JSONResponse(serializer.data, status=201)
