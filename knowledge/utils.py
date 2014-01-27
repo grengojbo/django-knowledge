@@ -114,35 +114,6 @@ def send_mail_full(mess, tpl_subject='subject.txt', tpl_message='message.txt', t
     staffers = Category.objects.select_related().get(pk=mess.get('categories', 1))
     out_dict = dict([[user['email'], user['username']] for user in staffers.user.values()])
 
-    # if settings.ALERTS and created:
-    #     # pull together the out_dict:
-    #     #    {'e@ma.il': ('first last', 'e@ma.il') or <User>}
-    #     if isinstance(instance, Response):
-    #         instances = list(instance.question.get_responses())
-    #         instances += [instance.question]
-    #
-    #         # dedupe people who want alerts thanks to dict keys...
-    #         out_dict = dict([[i.get_email(), i.get_user_or_pair()]
-    #                         for i in instances if i.alert])
-    #
-    #     elif isinstance(instance, Question):
-    #         # TODO: отправка почты всем is_staff переделать на категории
-    #         #staffers = User.objects.filter(is_staff=True)
-    #         #out_dict = dict([[user.email, user] for user in staffers if user.has_perm('change_question')])
-    #         try:
-    #             cat_id = instance.categories.pk
-    #         except:
-    #             cat_id = 1
-    #         logger.debug('>>> categories.id={0}'.format(cat_id))
-    #         staffers =Category.objects.select_related().get(pk=cat_id)
-    #         #staffers =Category.objects.select_related().get(Question.categories)
-    #         out_dict = dict([[user['email'], user['username']] for user in staffers.user.values()])
-    #
-    #     # remove the creator...
-    #     if instance.get_email() in out_dict.keys():
-    #         del out_dict[instance.get_email()]
-    #
-
     func(
         target_dict=out_dict,
         question=mess,

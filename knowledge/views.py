@@ -325,3 +325,37 @@ def api_contact(request, curent_cat=1):
             return JSONResponse(serializer.errors, status=400)
 
     return JSONResponse({}, status=status.HTTP_400_BAD_REQUEST)
+
+
+def api_zakaz(request, curent_cat=2):
+    if request.method == 'POST':
+        data = JSONParser().parse(request)
+        logger.debug('api_zakaz POST: {0}'.format(data))
+        if 'categories' not in data:
+            data['categories'] = curent_cat
+        else:
+            curent_cat = int(data['categories'])
+        try:
+            cur_cat = Category.objects.get(pk=curent_cat)
+        except Category.DoesNotExist:
+            return JSONResponse({'errors': _(u'Category does not exist')}, status=400)
+        if 'title' not in data:
+            data['title'] = cur_cat.title
+        serializer = QuestionSerializer(data=data)
+        if serializer.is_valid():
+            serializer.save()
+            if request.user.is_authenticated():
+                logger.debug("FORM SEND authenticated user")
+                # TODO: отправляем полностью письмо
+                send_mail_full(data, tpl_subject=cur_cat.tpl_subject, tpl_message=cur_cat.tpl_message,
+                               tpl_message_html=cur_cat.tpl_message_html)
+            else:
+                logger.debug("FORM SEND is anonymous tpl: {0}".format(cur_cat.tpl_subject))
+                logger.debug('serializer.data: {0}'.format(data))
+                send_mail_full(data, tpl_subject=cur_cat.tpl_subject, tpl_message=cur_cat.tpl_message,
+                               tpl_message_html=cur_cat.tpl_message_html)
+            return JSONResponse(serializer.data, status=201)
+        else:
+            return JSONResponse(serializer.errors, status=400)
+
+    return JSONResponse({}, status=status.HTTP_400_BAD_REQUEST)
