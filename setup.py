@@ -12,7 +12,7 @@ setup(
     author = 'Bryan Helmig',
     author_email = 'bryan@zapier.com',
     url = 'http://github.com/zapier/django-knowledge',
-    install_requires=['Django>=1.5.5'],
+    # install_requires=['Django==1.5.5'],
     packages=['knowledge'],
     package_data={'knowledge': [
       'migrations/*.py',
